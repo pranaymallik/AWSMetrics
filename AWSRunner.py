@@ -5,6 +5,8 @@ from EC2Spot import EC2SpotExtractor
 from Kinesis import Kinesis
 from LambaScraping import LambdaExtractor
 
+CSV_FOLDER = 'CSV_FOLDER'
+YAML_FOLDER = 'YAML_FOLDER'
 
 class AWSMetricsRunner:
     def __init__(self,csvName = '', yamlName = ''):
@@ -12,12 +14,14 @@ class AWSMetricsRunner:
         self.yaml_folder = yamlName
 
     def generate_folders(self):
-        path = 'C:\\Users\Pranay\PycharmProjects\AWSMetrics'
+        path = './'
         os.chdir(path)
-        NewFolder = self.csv_folder
-        os.mkdir(NewFolder)
-        NewFolder2 = self.yaml_folder
-        os.mkdir(NewFolder2)
+        if not os.path.exists(CSV_FOLDER):
+            NewFolder = CSV_FOLDER
+            os.mkdir(NewFolder)
+        if not os.path.exists(YAML_FOLDER):
+            NewFolder2 = YAML_FOLDER
+            os.mkdir(NewFolder2)
 
 
 if __name__  == '__main__':

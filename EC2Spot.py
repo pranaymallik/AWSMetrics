@@ -62,18 +62,22 @@ class EC2SpotExtractor:
         self.aws_dict = {'type': 'EC2Spot', 'keys': keysArray}
 
     def generate_csv(self):
-        path1 = 'C:\\Users\Pranay\PycharmProjects\AWSMetrics/CSV_FOLDER'
+        path1 = './CSV_FOLDER'
         os.chdir(path1)
         with open(CSV_FILE, 'w', newline='') as f:
             writer = csv.writer(f)
             writer.writerow(METRIC_HEADERS)
             writer.writerows(self.aws_list)
+        os.chdir('..')
+
 
     def generate_yaml(self):
-        path1 = 'C:\\Users\Pranay\PycharmProjects\AWSMetrics/YAML_FOLDER'
+        path1 = './YAML_FOLDER'
         os.chdir(path1)
         with open(YAML_FILE, 'w') as outfile:
             yaml.dump([self.aws_dict], outfile, default_flow_style=False)
+        os.chdir('..')
+
 
     @staticmethod
     def update_description(desc, value):
