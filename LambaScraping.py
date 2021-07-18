@@ -61,7 +61,7 @@ class LambdaExtractor:
         self.aws_list = []
         i = 0
         for arrTitle in arrTitles:
-            newArr = ["aws.lamba." + arrTitle, arrMetricType[i], '', '', '', arrMetricDesc[i], '', arrIntegration[i],'']
+            newArr = ["aws.lamba." + self.snake_case(arrTitle), arrMetricType[i], '', '', '', arrMetricDesc[i], '', arrIntegration[i],'']
             self.aws_list.append(newArr)
             i += 1
         keysArray = []

@@ -1,10 +1,10 @@
 metric_name,metric_type,interval,unit_name,per_unit_name,description,orientation,integration,short_name
-aws.ec2spot.available_instance_pools_count,gauge,,,,Count,,The Spot capacity pools specified in the Spot Fleet request.,EC2Spot,
-aws.ec2spot.bids_submitted_for_capacity,gauge,,,,Count,,The capacity for which Amazon EC2 has submitted Spot Fleet requests.,EC2Spot,
-aws.ec2spot.eligible_instance_pool_count,gauge,,,,Count,,The Spot capacity pools specified in the Spot Fleet request where Amazon EC2 can fulfill requests. Amazon EC2 does not fulfill requests in pools where the maximum price you're willing to pay for Spot Instances is less than the Spot price or the Spot price is greater than the price for On-Demand Instances.,EC2Spot,
-aws.ec2spot.fulfilled_capacity,gauge,,,,Count,,The capacity that Amazon EC2 has fulfilled.,EC2Spot,
-aws.ec2spot.max_percent_capacity_allocation,gauge,,,,Percent,,The maximum value of PercentCapacityAllocation across all Spot Fleet pools specified in the Spot Fleet request.,EC2Spot,
-aws.ec2spot.pending_capacity,gauge,,,,Count,,The difference between TargetCapacity and FulfilledCapacity .,EC2Spot,
-aws.ec2spot.percent_capacity_allocation,gauge,,,,Percent,,"The capacity allocated for the Spot capacity pool for the specified dimensions. To get the maximum value recorded across all Spot capacity pools, use MaxPercentCapacityAllocation .",EC2Spot,
-aws.ec2spot.target_capacity,gauge,,,,Count,,The target capacity of the Spot Fleet request.,EC2Spot,
-aws.ec2spot.terminating_capacity,gauge,,,,Count,,The capacity that is being terminated because the provisioned capacity is greater than the target capacity.,EC2Spot,
+aws.ec2spot.available_instance_pools_count,gauge,,,,Count,,The Spot capacity pools specified in the Spot Fleet request.,EC2Spot
+aws.ec2spot.bids_submitted_for_capacity,gauge,,,,Count,,The capacity for which Amazon EC2 has submitted Spot Fleet requests.,EC2Spot
+aws.ec2spot.eligible_instance_pool_count,gauge,,,,Count,,The Spot capacity pools specified in the Spot Fleet request where Amazon EC2 can fulfill requests. Amazon EC2 does not fulfill requests in pools where the maximum price you're willing to pay for Spot Instances is less than the Spot price or the Spot price is greater than the price for On-Demand Instances.,EC2Spot
+aws.ec2spot.fulfilled_capacity,gauge,,,,Count,,The capacity that Amazon EC2 has fulfilled.,EC2Spot
+aws.ec2spot.max_percent_capacity_allocation,gauge,,,,Percent,,The maximum value of PercentCapacityAllocation across all Spot Fleet pools specified in the Spot Fleet request.,EC2Spot
+aws.ec2spot.pending_capacity,gauge,,,,Count,,The difference between TargetCapacity and FulfilledCapacity .,EC2Spot
+aws.ec2spot.percent_capacity_allocation,gauge,,,,Percent,,"The capacity allocated for the Spot capacity pool for the specified dimensions. To get the maximum value recorded across all Spot capacity pools, use MaxPercentCapacityAllocation .",EC2Spot
+aws.ec2spot.target_capacity,gauge,,,,Count,,The target capacity of the Spot Fleet request.,EC2Spot
+aws.ec2spot.terminating_capacity,gauge,,,,Count,,The capacity that is being terminated because the provisioned capacity is greater than the target capacity.,EC2Spot

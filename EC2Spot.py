@@ -54,7 +54,7 @@ class EC2SpotExtractor:
             i += 1
         j = 0
         for metricName in arrMetricNames:
-            self.aws_list.append(['aws.ec2spot.'+self.snake_case(metricName), "gauge", '','','',arrMetricUnits[j],'', arrMetricDesc[j], "EC2Spot",''])
+            self.aws_list.append(['aws.ec2spot.'+self.snake_case(metricName), "gauge", '','','',arrMetricUnits[j],'', arrMetricDesc[j], "EC2Spot"])
             j += 1
         keysArray = []
         for arrMetricName in arrMetricNames:
