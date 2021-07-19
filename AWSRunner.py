@@ -8,6 +8,7 @@ from AWS_S3 import AWSS3Extractor
 from AWS_RDS import AWSRDSExtractor
 from AWS_EBS import AWSEBSExtractor
 from AWS_EC2 import AWSEc2Extractor
+from AWS_ELB import ELBExtractor
 
 CSV_FOLDER = 'CSV_FOLDER'
 YAML_FOLDER = 'YAML_FOLDER'
@@ -103,6 +104,14 @@ if __name__  == '__main__':
     EC2Runner.generate_yaml()
     EC2Runner.generate_csv()
     print("Finished Metric: EC2")
+
+    ELBRunner = ELBExtractor('https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-cloudwatch-metrics.html')
+    ELBRunner.load_page()
+    ELBRunner.process_content()
+    print('Processing Metric: ELB')
+    ELBRunner.generate_yaml()
+    ELBRunner.generate_csv()
+    print("Finished Metric: ELB")
 
     print("Task Completed Successfully")
 
