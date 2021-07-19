@@ -50,11 +50,14 @@ class EC2SpotExtractor:
                 var2 = ' '.join(var1.split())
            #     print(var2)
                 arrMetricDesc.append(var2)
-                arrMetricUnits.append(allPs[1].string.strip().replace('Units: ', ''))
+                if allPs[1].string.strip() != 'Units: gauge' and allPs[1].string.strip() != 'Units: Count':
+                    arrMetricUnits.append('gauge')
+                else:
+                    arrMetricUnits.append(allPs[1].string.strip().replace('Units: ', ''))
             i += 1
         j = 0
         for metricName in arrMetricNames:
-            self.aws_list.append(['aws.ec2spot.'+self.snake_case(metricName), "gauge", '','','',arrMetricUnits[j],'', arrMetricDesc[j], "EC2Spot"])
+            self.aws_list.append(['aws.ec2spot.'+self.snake_case(metricName), arrMetricUnits[j],'','','', arrMetricDesc[j],'', "EC2Spot"])
             j += 1
         keysArray = []
         for arrMetricName in arrMetricNames:
