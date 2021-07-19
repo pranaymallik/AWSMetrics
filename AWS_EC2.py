@@ -23,8 +23,8 @@ CODE_MAP = {
     'EBSWriteOps': 'aws.ec2.ebs_write_ops',
     'EBSWriteBytes': 'aws.ec2.ebs_write_bytes',
     'EBSReadBytes': 'aws.ec2.ebs_read_bytes',
-    'EBSIobalance%': 'aws.ec2.ebs_iobalance%',
-    'EBSBytesbalance%': 'aws.ec2.ebs_byte_balance%'
+    'EBSIobalance%': 'aws.ec2.ebs_io_balance%',
+    'EBSByteBalance%': 'aws.ec2.ebs_byte_balance%'
 }
 
 
@@ -54,7 +54,7 @@ class AWSEc2Extractor:
         tableonerows = matchone[1].findAll('tr')
         tabletworows = matchone[2].findAll('tr')
         tablethreerows = matchone[3].findAll('tr')
-        match = soup.find('table', id="w627aac21c19c15c11b5")
+        match = soup.find('table', id="w628aac21c19c15c11b5")
         matchrows = match.findAll('tr')
         tablefourrows = matchone[4].findAll('tr')
         table5 = matchone[5].findAll('tr')
@@ -72,6 +72,8 @@ class AWSEc2Extractor:
                     metric_name = metric_name.replace('cpu', 'cpu_')  # redo this
                 if ogmetric_name in CODE_MAP.keys():
                     metric_name= CODE_MAP[ogmetric_name]
+                self.aws_dict['keys'].append(
+                    {'name': metric_name, 'alias': 'dimension_' + ogmetric_name})
                 coloftone = cols[1]
                 secon = coloftone.findChildren('p')
                 if secon and len(secon) > 0:
@@ -117,6 +119,8 @@ class AWSEc2Extractor:
                 # print(metric_namethree)
                 if ogmetricthree_name in CODE_MAP.keys():
                     metric_namethree = CODE_MAP[ogmetricthree_name]
+                self.aws_dict['keys'].append(
+                    {'name': metric_namethree, 'alias': 'dimension_' + ogmetricthree_name})
                 coloftthree = colsthree[1]
                 seconthree = coloftthree.findChildren('p')
                 if seconthree and len(seconthree) > 0:
@@ -151,8 +155,9 @@ class AWSEc2Extractor:
                 #print(ogmetrictwo_name)
                 #break
                 if ogmetrictwo_name in CODE_MAP.keys():
-
                     metric_nametwo = CODE_MAP[ogmetrictwo_name]
+                self.aws_dict['keys'].append(
+                    {'name': metric_nametwo, 'alias': 'dimension_' + ogmetrictwo_name})
                 # print(metric_nametwo)
                 colofttwo = colstwo[1]
                 secontwo = colofttwo.findChildren('p')
@@ -197,6 +202,8 @@ class AWSEc2Extractor:
                 # print(metric_namefour)
                 if ogmetricfour_name in CODE_MAP.keys():
                     metric_namefour = CODE_MAP[ogmetricfour_name]
+                self.aws_dict['keys'].append(
+                    {'name': metric_name, 'alias': 'dimension_' + ogmetricfour_name})
                 colofour = colsfour[1]
                 secon4 = colofour.findChildren('p')
                 if secon4 and len(secon4) > 0:
@@ -230,6 +237,9 @@ class AWSEc2Extractor:
                     metric_namefive = metric_namefive.replace('cpu', 'cpu_')  # redo this
                 if ogmetricfive_name in CODE_MAP.keys():
                     metric_namefive = CODE_MAP[ogmetricfive_name]
+                self.aws_dict['keys'].append(
+                    {'name': metric_namefive, 'alias': 'dimension_' + ogmetricfive_name})
+
                 # print(metric_namefive)
                 coloftfive = colsfive[1]
                 seconfive = coloftfive.findChildren('p')
@@ -269,6 +279,8 @@ class AWSEc2Extractor:
             colsix = colssix[0]
             ogmetricsix_name = colsix.text.strip()
             metric_namesix = 'aws.ec2.' + self.convertToSnakeCase(ogmetricsix_name)
+            self.aws_dict['keys'].append(
+                {'name': metric_namesix, 'alias': 'dimension_' + ogmetricsix_name})
             coloftsix = colssix[1]
             seconsix = coloftsix.findChildren('p')
             if seconsix and len(seconsix) > 0:
@@ -307,7 +319,7 @@ class AWSEc2Extractor:
     def generate_yaml(self):
         path1 = './YAML_FOLDER'
         os.chdir(path1)
-        with open('AWS_ELB.yaml', 'w') as outfile:
+        with open(YAML_File, 'w') as outfile:
             yaml.dump([self.aws_dict], outfile, default_flow_style=False)
         os.chdir('..')
 
