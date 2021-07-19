@@ -1,0 +1,42 @@
+- keys:
+  - alias: dimension_BackendConnectionErrors
+    name: aws.elb.backend_connection_errors
+  - alias: dimension_DesyncMitigationMode_NonCompliant_Request_Count
+    name: aws.elb.desync_mitigation_mode_non_compliant_request_count
+  - alias: dimension_HealthyHostCount
+    name: aws.elb.healthy_host_count
+  - alias: dimension_aws.elb.httpcode_backend_3xx
+    name: aws.elb.httpcode_backend_3xx
+  - alias: dimension_aws.elb.httpcode_backend_4xx
+    name: aws.elb.httpcode_backend_4xx
+  - alias: dimension_aws.elb.httpcode_backend_5xx
+    name: aws.elb.httpcode_backend_5xx
+  - alias: dimension_aws.elb.httpcode_backend_5xx
+    name: aws.elb.httpcode_backend_5xx
+  - alias: dimension_HTTPCode_ELB_4XX
+    name: aws.elb.http_code_elb_4xx
+  - alias: dimension_HTTPCode_ELB_5XX
+    name: aws.elb.http_code_elb_5xx
+  - alias: dimension_Latency
+    name: aws.elb.latency
+  - alias: dimension_RequestCount
+    name: aws.elb.request_count
+  - alias: dimension_SpilloverCount
+    name: aws.elb.spillover_count
+  - alias: dimension_SurgeQueueLength
+    name: aws.elb.surge_queue_length
+  - alias: dimension_UnHealthyHostCount
+    name: aws.elb.un_healthy_host_count
+  - alias: dimension_EstimatedALBActiveConnectionCount
+    name: estimated_alb_active_connection_count
+  - alias: dimension_EstimatedALBConsumedLCUs
+    name: estimated_alb_consumed_lcus
+  - alias: dimension_EstimatedALBNewConnectionCount
+    name: estimated_alb_new_connection_count
+  - alias: dimension_EstimatedProcessedBytes
+    name: aws.elbestimated_processed_bytes
+  - alias: dimension_AvailabilityZone
+    name: aws.elbavailability_zone
+  - alias: dimension_LoadBalancerName
+    name: aws.elbload_balancer_name
+  type: elb

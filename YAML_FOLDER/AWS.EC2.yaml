@@ -1,0 +1,58 @@
+- keys:
+  - alias: dimension_CPUUtilization
+    name: aws.ec2.cpu_utilization
+  - alias: dimension_DiskReadOps
+    name: aws.ec2.disk_read_ops
+  - alias: dimension_DiskWriteOps
+    name: aws.ec2.disk_write_ops
+  - alias: dimension_DiskReadBytes
+    name: aws.ec2.disk_read_bytes
+  - alias: dimension_DiskWriteBytes
+    name: aws.ec2.disk_write_bytes
+  - alias: dimension_MetadataNoToken
+    name: aws.ec2.metadata_no_token
+  - alias: dimension_NetworkIn
+    name: aws.ec2.network_in
+  - alias: dimension_NetworkOut
+    name: aws.ec2.network_out
+  - alias: dimension_NetworkPacketsIn
+    name: aws.ec2.network_packets_in
+  - alias: dimension_NetworkPacketsOut
+    name: aws.ec2.network_packets_out
+  - alias: dimension_CPUCreditUsage
+    name: aws.ec2.cpu_credit_usage
+  - alias: dimension_CPUCreditBalance
+    name: aws.ec2.cpu_credit_balance
+  - alias: dimension_CPUSurplusCreditBalance
+    name: aws.ec2.cpu_surplus_credit_balance
+  - alias: dimension_CPUSurplusCreditsCharged
+    name: aws.ec2.cpu_surplus_credits_charged
+  - alias: dimension_EBSReadOps
+    name: aws.ec2.ebs_read_ops
+  - alias: dimension_EBSWriteOps
+    name: aws.ec2.ebs_write_ops
+  - alias: dimension_EBSReadBytes
+    name: aws.ec2.ebs_read_bytes
+  - alias: dimension_EBSWriteBytes
+    name: aws.ec2.ebs_write_bytes
+  - alias: dimension_EBSIOBalance%
+    name: aws.ec2.ebs_io_balance%
+  - alias: dimension_EBSByteBalance%
+    name: aws.ec2.ebs_byte_balance%
+  - alias: dimension_StatusCheckFailed
+    name: aws.ec2.network_packets_out
+  - alias: dimension_StatusCheckFailed_Instance
+    name: aws.ec2.network_packets_out
+  - alias: dimension_StatusCheckFailed_System
+    name: aws.ec2.network_packets_out
+  - alias: dimension_AutoScalingGroupName
+    name: aws.ec2.auto_scaling_group_name
+  - alias: dimension_ImageId
+    name: aws.ec2.image_id
+  - alias: dimension_InstanceId
+    name: aws.ec2.instance_id
+  - alias: dimension_InstanceType
+    name: aws.ec2.instance_type
+  - alias: dimension_ResourceCount
+    name: aws.ec2.resource_count
+  type: EC2
