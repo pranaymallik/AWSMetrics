@@ -67,7 +67,7 @@ class LambdaExtractor:
         keysArray = []
         for arrMetricName in arrTitles:
             keysArray.append({'name': self.snake_case(arrMetricName), 'alias': 'dimension_' + arrMetricName})
-        self.aws_dict = {'type': 'EC2Spot', 'keys': keysArray}
+  #      self.aws_dict = {'type': 'EC2Spot', 'keys': keysArray}
 
     def generate_csv(self):
         path1 = './CSV_FOLDER'

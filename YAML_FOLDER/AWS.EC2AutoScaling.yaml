@@ -1,28 +1,4 @@
 - keys:
-  - alias: dimension_GroupMinSize
-    name: group_min_size
-  - alias: dimension_GroupMaxSize
-    name: group_max_size
-  - alias: dimension_GroupDesiredCapacity
-    name: group_desired_capacity
-  - alias: dimension_GroupInServiceInstances
-    name: group_in_service_instances
-  - alias: dimension_GroupPendingInstances
-    name: group_pending_instances
-  - alias: dimension_GroupStandbyInstances
-    name: group_standby_instances
-  - alias: dimension_GroupTerminatingInstances
-    name: group_terminating_instances
-  - alias: dimension_GroupTotalInstances
-    name: group_total_instances
-  - alias: dimension_GroupInServiceCapacity
-    name: group_in_service_capacity
-  - alias: dimension_GroupPendingCapacity
-    name: group_pending_capacity
-  - alias: dimension_GroupStandbyCapacity
-    name: group_standby_capacity
-  - alias: dimension_GroupTerminatingCapacity
-    name: group_terminating_capacity
-  - alias: dimension_GroupTotalCapacity
-    name: group_total_capacity
-  type: EC2Spot
+  - alias: dimension_AutoScalingGroupName
+    name: autoscaling_group_name
+  type: EC2AutoScaling
