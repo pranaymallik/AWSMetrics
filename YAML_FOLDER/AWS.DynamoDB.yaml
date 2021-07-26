@@ -1,66 +1,18 @@
 - keys:
-  - alias: dimension_AccountMaxReads
-    name: account_max_reads
-  - alias: dimension_AccountMaxTableLevelReads
-    name: account_max_table_level_reads
-  - alias: dimension_AccountMaxTableLevelWrites
-    name: account_max_table_level_writes
-  - alias: dimension_AccountMaxWrites
-    name: account_max_writes
-  - alias: dimension_AccountProvisionedReadCapacityUtilization
-    name: account_provisioned_read_capacity_utilization
-  - alias: dimension_AccountProvisionedWriteCapacityUtilization
-    name: account_provisioned_write_capacity_utilization
-  - alias: dimension_AgeOfOldestUnreplicatedRecord
-    name: age_of_oldest_unreplicated_record
-  - alias: dimension_ConditionalCheckFailedRequests
-    name: conditional_check_failed_requests
-  - alias: dimension_ConsumedChangeDataCaptureUnits
-    name: consumed_change_data_capture_units
-  - alias: dimension_ConsumedReadCapacityUnits
-    name: consumed_read_capacity_units
-  - alias: dimension_ConsumedWriteCapacityUnits
-    name: consumed_write_capacity_units
-  - alias: dimension_MaxProvisionedTableReadCapacityUtilization
-    name: max_provisioned_table_read_capacity_utilization
-  - alias: dimension_MaxProvisionedTableWriteCapacityUtilization
-    name: max_provisioned_table_write_capacity_utilization
-  - alias: dimension_OnlineIndexConsumedWriteCapacity
-    name: online_index_consumed_write_capacity
-  - alias: dimension_OnlineIndexPercentageProgress
-    name: online_index_percentage_progress
-  - alias: dimension_OnlineIndexThrottleEvents
-    name: online_index_throttle_events
-  - alias: dimension_PendingReplicationCount
-    name: pending_replication_count
-  - alias: dimension_ProvisionedReadCapacityUnits
-    name: provisioned_read_capacity_units
-  - alias: dimension_ProvisionedWriteCapacityUnits
-    name: provisioned_write_capacity_units
-  - alias: dimension_ReadThrottleEvents
-    name: read_throttle_events
-  - alias: dimension_ReplicationLatency
-    name: replication_latency
-  - alias: dimension_ReturnedBytes
-    name: returned_bytes
-  - alias: dimension_ReturnedItemCount
-    name: returned_item_count
-  - alias: dimension_ReturnedRecordsCount
-    name: returned_records_count
-  - alias: dimension_SuccessfulRequestLatency
-    name: successful_request_latency
-  - alias: dimension_SystemErrors
-    name: system_errors
-  - alias: dimension_TimeToLiveDeletedItemCount
-    name: time_to_live_deleted_item_count
-  - alias: dimension_ThrottledPutRecordCount
-    name: throttled_put_record_count
-  - alias: dimension_ThrottledRequests
-    name: throttled_requests
-  - alias: dimension_TransactionConflict
-    name: transaction_conflict
-  - alias: dimension_UserErrors
-    name: user_errors
-  - alias: dimension_WriteThrottleEvents
-    name: write_throttle_events
-  type: Kinesis
+  - alias: dimension_DelegatedOperation
+    name: delegated_operation
+  - alias: dimension_GlobalSecondaryIndexName
+    name: global_secondary_index_name
+  - alias: dimension_Operation
+    name: operation
+  - alias: dimension_OperationType
+    name: operation_type
+  - alias: dimension_Verb
+    name: verb
+  - alias: dimension_ReceivingRegion
+    name: receiving_region
+  - alias: dimension_StreamLabel
+    name: stream_label
+  - alias: dimension_TableName
+    name: table_name
+  type: DynamoDB
