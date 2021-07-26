@@ -1,8 +1,0 @@
-- keys:
-  - alias: dimension_BucketName
-    name: bucket_name
-  - alias: dimension_Storage_Type
-    name: storage_type
-  - alias: dimension_FilterID
-    name: filter_id
-  type: s3

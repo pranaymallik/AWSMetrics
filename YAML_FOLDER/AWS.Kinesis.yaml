@@ -1,4 +1,0 @@
-- keys:
-  - alias: dimension_StreamName
-    name: stream_name
-  type: Kinesis

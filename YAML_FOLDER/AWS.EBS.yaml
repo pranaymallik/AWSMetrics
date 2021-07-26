@@ -1,8 +1,0 @@
-- keys:
-    - alias: dimension_VolumeID
-      name: volume_id
-    - alias: dimension_SnapshotID
-      name: snapshot_id
-    - alias: dimension_AvailabilityZone
-      name: availability_zone
-  type: ebs

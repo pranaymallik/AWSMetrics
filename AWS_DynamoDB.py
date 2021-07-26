@@ -13,6 +13,7 @@ METRIC_HEADERS = ["metric_name", "metric_type", "interval", "unit_name", "per_un
                   "integration", "short_name"]
 YAML_FILE = "AWS.DynamoDB.yaml"
 CSV_FILE = "AWS.DynamoDB.csv"
+CSV_FILE_2 = "AWS.stats.DynamoDB.csv"
 TABLE_IDS = ['w557aac27b7c17b7c11b5b7']
 
 
@@ -22,6 +23,7 @@ class DynamoDB:
         self.content = ""
         self.aws_dict = {}
         self.aws_list = []
+        self.aws_metric_names = []
 
     def load_page(self):
         page = requests.get(self.url)
@@ -46,10 +48,12 @@ class DynamoDB:
                     continue
             rows = table.findAll('tr')
             for row in rows:
+                rowStats = []
                 cols = row.findAll('td')
                 if cols and len(cols) > 0:
                     col = cols[0]
                     original_metric_name = col.text.strip()
+                    #print(original_metric_name)
                     metric_name_snake_case = self.snake_case(original_metric_name.replace('.', ''))
                     metric_name = 'aws.DynamoDB.' + metric_name_snake_case
 
@@ -63,6 +67,7 @@ class DynamoDB:
                         metric_desc = ''
                         metric_stats = ''
                         metric_units = ''
+                        i = 0;
                         for section in sections:
                             if section:
                                 section_string = section.text.strip()
@@ -72,12 +77,15 @@ class DynamoDB:
                                     metric_desc = section_string
                             #        print(metric_desc)
                                 elif section_string.startswith(VALID_STATISTICS_):
-                                  #  print("entered")
+                                    listOfDimensions = col.find('ul')
+                                    listItems = listOfDimensions.findAll('li')
+                                    for li in listItems:
+                                        listChildren = li.find('code')
+                                        rowStats.append(listChildren.string.strip())
+
                                     metric_stats = section_string.replace(VALID_STATISTICS_, '').strip()
-                                 #   print(section)
                                     metric_stats = " ".join(metric_stats.split())
                                     metric_stats = metric_stats.replace('\n', '')
-                                 #   print(metric_stats)
                                 elif section_string.startswith(UNITS_):
                                     metric_units = section_string.replace(UNITS_, '').strip()
                             idx = idx + 1
@@ -92,6 +100,10 @@ class DynamoDB:
                                         self.add_to_list(self.aws_list, metric_name + '.' + suffix, metric_units,
                                                          metric_stats,
                                                          self.update_description(metric_desc, suffix))
+                            i+=1;
+                    rowStats1 = '\n'.join(rowStats)
+                    self.aws_metric_names.append([original_metric_name, rowStats1])
+                    #print(self.aws_metric_names)
 
     def generate_csv(self):
         path1 = './CSV_FOLDER'
@@ -102,6 +114,15 @@ class DynamoDB:
             writer.writerow(METRIC_HEADERS)
             writer.writerows(self.aws_list)
         os.chdir('..')
+        path2 = './CSV_METRIC_NAMES'
+        os.chdir(path2)
+        with open(CSV_FILE_2, 'w', newline='') as f:
+        #    print(self.aws_list)
+            writer = csv.writer(f)
+            writer.writerow(['Metric Name', 'Valid Statistics'])
+            writer.writerows(self.aws_metric_names)
+        os.chdir('..')
+
 
 
     def generate_yaml(self):

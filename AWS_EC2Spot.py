@@ -13,7 +13,7 @@ METRIC_HEADERS = ["metric_name", "metric_type", "interval", "unit_name", "per_un
                   "integration", "short_name"]
 YAML_FILE = "AWS.EC2SPOT.yaml"
 CSV_FILE = "AWS.EC2SPOT.csv"
-
+CSV_FILE_2 = "AWS.stats.EC2SPOT.csv"
 
 class EC2SpotExtractor:
     def __init__(self, url):
@@ -21,6 +21,7 @@ class EC2SpotExtractor:
         self.content = ""
         self.aws_dict = {}
         self.aws_list = []
+        self.aws_metric_names = []
 
     def load_page(self):
         page = requests.get(self.url)
@@ -57,6 +58,7 @@ class EC2SpotExtractor:
             i += 1
         j = 0
         for metricName in arrMetricNames:
+            self.aws_metric_names.append([metricName,'None'])
             self.aws_list.append(['aws.ec2spot.'+self.snake_case(metricName), arrMetricUnits[j],'','','', arrMetricDesc[j],'', "EC2Spot"])
             j += 1
         keysArray = []
@@ -72,6 +74,15 @@ class EC2SpotExtractor:
             writer.writerow(METRIC_HEADERS)
             writer.writerows(self.aws_list)
         os.chdir('..')
+        path2 = './CSV_METRIC_NAMES'
+        os.chdir(path2)
+        with open(CSV_FILE_2, 'w', newline='') as f:
+        #    print(self.aws_list)
+            writer = csv.writer(f)
+            writer.writerow(['Metric Name', 'Valid Statistics'])
+            writer.writerows(self.aws_metric_names)
+        os.chdir('..')
+
 
 
     def generate_yaml(self):

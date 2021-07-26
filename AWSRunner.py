@@ -12,6 +12,7 @@ from AWS_ELB import ELBExtractor
 
 CSV_FOLDER = 'CSV_FOLDER'
 YAML_FOLDER = 'YAML_FOLDER'
+CSV_FOLDER_2 = 'CSV_METRIC_NAMES'
 
 class AWSMetricsRunner:
     def __init__(self,csvName = '', yamlName = ''):
@@ -27,6 +28,9 @@ class AWSMetricsRunner:
         if not os.path.exists(YAML_FOLDER):
             NewFolder2 = YAML_FOLDER
             os.mkdir(NewFolder2)
+        if not os.path.exists(CSV_FOLDER_2):
+            NewFolder3 = CSV_FOLDER_2
+            os.mkdir(NewFolder3)
 
 
 if __name__  == '__main__':
@@ -79,6 +83,7 @@ if __name__  == '__main__':
     print("Processing Metric: S3")
     S3Runner.generate_yaml()
     S3Runner.generate_csv()
+    S3Runner.generate_csv2()
     print("Finished Metric: S3")
 
     RDSRunner = AWSRDSExtractor('https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/monitoring-cloudwatch.html')
@@ -87,6 +92,7 @@ if __name__  == '__main__':
     print("Processing Metric: RDS")
     RDSRunner.generate_yaml()
     RDSRunner.generate_csv()
+    RDSRunner.generate_csv2()
     print("Finished Metric: RDS")
 
     EBSRunner = AWSEBSExtractor('https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using_cloudwatch_ebs.html')
@@ -95,6 +101,7 @@ if __name__  == '__main__':
     print('Processing Metric: EBS')
     EBSRunner.generate_yaml()
     EBSRunner.generate_csv()
+    EBSRunner.generate_csv2()
     print("Finished Metric: EBS")
 
     EC2Runner = AWSEc2Extractor('https://docs.aws.amazon.com/AmazonS3/latest/userguide/metrics-dimensions.html')
@@ -103,6 +110,7 @@ if __name__  == '__main__':
     print('Processing Metric: EC2')
     EC2Runner.generate_yaml()
     EC2Runner.generate_csv()
+    EC2Runner.generate_csv2()
     print("Finished Metric: EC2")
 
     ELBRunner = ELBExtractor('https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-cloudwatch-metrics.html')
@@ -111,6 +119,7 @@ if __name__  == '__main__':
     print('Processing Metric: ELB')
     ELBRunner.generate_yaml()
     ELBRunner.generate_csv()
+    ELBRunner.generate_csv2()
     print("Finished Metric: ELB")
 
     print("Task Completed Successfully")

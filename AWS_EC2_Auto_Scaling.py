@@ -15,6 +15,7 @@ YAML_FILE = "AWS.EC2AutoScaling.yaml"
 CSV_FILE = "AWS.EC2AutoScaling.csv"
 CSV_FOLDER = "CSV_FOLDER"
 YAML_FOLDER = "YAML_FOLDER"
+CSV_FILE_2 = "AWS.stats.EC2AutoScaling"
 
 class EC2AutoExtractor:
     def __init__(self, url):
@@ -22,6 +23,7 @@ class EC2AutoExtractor:
         self.content = ""
         self.aws_dict = {}
         self.aws_list = []
+        self.aws_metric_names = []
 
     def load_page(self):
         page = requests.get(self.url)
@@ -59,6 +61,7 @@ class EC2AutoExtractor:
             count += 1
         keysArray = []
         for arrMetricName in arrMetricName:
+            self.aws_metric_names.append([arrMetricName,'None'])
             keysArray.append({'name': self.snake_case(arrMetricName), 'alias': 'dimension_' + arrMetricName})
         self.aws_dict = {'type': 'EC2Spot', 'keys': keysArray}
 
@@ -71,6 +74,15 @@ class EC2AutoExtractor:
             writer.writerow(METRIC_HEADERS)
             writer.writerows(self.aws_list)
         os.chdir('..')
+        path2 = './CSV_METRIC_NAMES'
+        os.chdir(path2)
+        with open(CSV_FILE_2, 'w', newline='') as f:
+        #    print(self.aws_list)
+            writer = csv.writer(f)
+            writer.writerow(['Metric Name', 'Valid Statistics'])
+            writer.writerows(self.aws_metric_names)
+        os.chdir('..')
+
 
 
     def generate_yaml(self):

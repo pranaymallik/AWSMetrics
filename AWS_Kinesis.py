@@ -14,7 +14,7 @@ METRIC_HEADERS = ["metric_name", "metric_type", "interval", "unit_name", "per_un
 YAML_FILE = "AWS.Kinesis.yaml"
 CSV_FILE = "AWS.Kinesis.csv"
 TABLE_IDS = ['w228aac23c11c11b9b7','w228aac23c11c11c11b7']
-
+CSV_FILE_2 = "AWS.stats.Kinesis.csv"
 
 class Kinesis:
     def __init__(self, url):
@@ -22,6 +22,7 @@ class Kinesis:
         self.content = ""
         self.aws_dict = {}
         self.aws_list = []
+        self.aws_metric_names = []
 
     def load_page(self):
         page = requests.get(self.url)
@@ -46,6 +47,7 @@ class Kinesis:
                     continue
             rows = table.findAll('tr')
             for row in rows:
+                rowArr = []
                 cols = row.findAll('td')
                 if cols and len(cols) > 0:
                     col = cols[0]
@@ -74,6 +76,8 @@ class Kinesis:
                                     metric_stats = section_string.replace(VALID_STATISTICS_, '').strip()
                                     metric_stats = " ".join(metric_stats.split())
                                     metric_stats = metric_stats.replace('\n', '')
+                                    metric_stats = metric_stats.replace(', ', '\n')
+                                   # print(metric_stats)
                                 elif section_string.startswith(UNITS_):
                                     metric_units = section_string.replace(UNITS_, '').strip()
                             idx = idx + 1
@@ -87,6 +91,7 @@ class Kinesis:
                                         self.add_to_list(self.aws_list, metric_name + '.' + suffix, metric_units,
                                                          metric_stats,
                                                          self.update_description(metric_desc, suffix))
+                    self.aws_metric_names.append([metric_name,metric_stats])
 
     def generate_csv(self):
         path1 = './CSV_FOLDER'
@@ -96,6 +101,15 @@ class Kinesis:
             writer.writerow(METRIC_HEADERS)
             writer.writerows(self.aws_list)
         os.chdir('..')
+        path2 = './CSV_METRIC_NAMES'
+        os.chdir(path2)
+        with open(CSV_FILE_2, 'w', newline='') as f:
+        #    print(self.aws_list)
+            writer = csv.writer(f)
+            writer.writerow(['Metric Name', 'Valid Statistics'])
+            writer.writerows(self.aws_metric_names)
+        os.chdir('..')
+
 
 
     def generate_yaml(self):

@@ -13,7 +13,7 @@ METRIC_HEADERS = ["metric_name", "metric_type", "interval", "unit_name", "per_un
                   "integration", "short_name"]
 YAML_FILE = "AWS.lamba.yaml"
 CSV_FILE = "AWS.lamba.csv"
-
+CSV_FILE_2 = 'AWS.stats.lambda.csv'
 
 class LambdaExtractor:
     def __init__(self, url):
@@ -21,6 +21,7 @@ class LambdaExtractor:
         self.content = ""
         self.aws_dict = {}
         self.aws_list = []
+        self.aws_metric_names = []
 
     def load_page(self):
         page = requests.get(self.url)
@@ -61,6 +62,7 @@ class LambdaExtractor:
         self.aws_list = []
         i = 0
         for arrTitle in arrTitles:
+            self.aws_metric_names.append([arrTitle,'None'])
             newArr = ["aws.lamba." + self.snake_case(arrTitle), arrMetricType[i], '', '', '', arrMetricDesc[i], '', arrIntegration[i],'']
             self.aws_list.append(newArr)
             i += 1
@@ -77,6 +79,15 @@ class LambdaExtractor:
             writer.writerow(METRIC_HEADERS)
             writer.writerows(self.aws_list)
         os.chdir('..')
+        path2 = './CSV_METRIC_NAMES'
+        os.chdir(path2)
+        with open(CSV_FILE_2, 'w', newline='') as f:
+        #    print(self.aws_list)
+            writer = csv.writer(f)
+            writer.writerow(['Metric Name', 'Valid Statistics'])
+            writer.writerows(self.aws_metric_names)
+        os.chdir('..')
+
 
 
     def generate_yaml(self):

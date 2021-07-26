@@ -1,4 +1,0 @@
-- keys:
-  - alias: dimension_AutoScalingGroupName
-    name: autoscaling_group_name
-  type: EC2AutoScaling
