@@ -1,0 +1,10 @@
+- keys:
+  - alias: dimension_Service
+    name: aws.ec2.service
+  - alias: dimension_Type
+    name: aws.ec2.type
+  - alias: dimension_Resource
+    name: aws.ec2.resource
+  - alias: dimension_Class
+    name: aws.ec2.class
+  type: EC2

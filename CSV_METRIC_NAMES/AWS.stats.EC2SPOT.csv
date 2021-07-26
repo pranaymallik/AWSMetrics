@@ -1,0 +1,10 @@
+Metric Name,Valid Statistics
+AvailableInstancePoolsCount,None
+BidsSubmittedForCapacity,None
+EligibleInstancePoolCount,None
+FulfilledCapacity,None
+MaxPercentCapacityAllocation,None
+PendingCapacity,None
+PercentCapacityAllocation,None
+TargetCapacity,None
+TerminatingCapacity,None

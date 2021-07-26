@@ -1,0 +1,15 @@
+Metric Name,Valid Statistics
+Invocations,None
+Errors,None
+DeadLetterErrors,None
+DestinationDeliveryFailures,None
+Throttles,None
+ProvisionedConcurrencyInvocations,None
+ProvisionedConcurrencySpilloverInvocations,None
+Duration,None
+PostRuntimeExtensionsDuration,None
+IteratorAge,None
+ConcurrentExecutions,None
+ProvisionedConcurrentExecutions,None
+ProvisionedConcurrencyUtilization,None
+UnreservedConcurrentExecutions,None

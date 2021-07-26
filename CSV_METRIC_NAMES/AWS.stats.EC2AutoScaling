@@ -1,0 +1,14 @@
+Metric Name,Valid Statistics
+GroupMinSize,None
+GroupMaxSize,None
+GroupDesiredCapacity,None
+GroupInServiceInstances,None
+GroupPendingInstances,None
+GroupStandbyInstances,None
+GroupTerminatingInstances,None
+GroupTotalInstances,None
+GroupInServiceCapacity,None
+GroupPendingCapacity,None
+GroupStandbyCapacity,None
+GroupTerminatingCapacity,None
+GroupTotalCapacity,None
