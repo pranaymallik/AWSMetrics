@@ -10,7 +10,8 @@ UNITS_ = 'Units:'
 CSV_FILE = 'AWS.EC2.csv'
 CSV2 = 'AWS.stats.EC2.csv'
 YAML_File = 'AWS.EC2.yaml'
-METRIC_HEADERS = ['metric_name', 'metric_unit', 'description']
+METRIC_HEADERS = ["metric_name", "metric_type", "interval", "unit_name", "per_unit_name", "description", "orientation",
+                  "integration", "short_name", ]
 lineadder = ['Minimum', 'Maximum', 'Average']
 Statistics = 'Statistics: '
 mn = ['Metric Name',"Metric Stats"]
@@ -315,7 +316,7 @@ class AWSEc2Extractor:
         os.chdir('./CSV_METRIC_NAMES')
         with open(CSV2, 'w', newline='') as f:
             wr = csv.writer(f)
-            wr.writerow(mn)
+            wr.writerow(METRIC_HEADERS)
             wr.writerows(self.aws_list2)
         os.chdir('..')
     def generate_yaml(self):

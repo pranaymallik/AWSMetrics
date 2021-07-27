@@ -13,7 +13,8 @@ METRIC_HEADERS = ["metric_name", "metric stats"]
 YAML_FILE = "AWS.S3.yaml"
 CSV_FILE = "AWS.S3.csv"
 csv2 = "AWS.stats.S3.csv"
-
+mn= ["metric_name", "metric_type", "interval", "unit_name", "per_unit_name", "description", "orientation",
+                  "integration", "short_name", ]
 
 class AWSS3Extractor:
     def __init__(self, url):
@@ -85,8 +86,8 @@ class AWSS3Extractor:
                                                      metric_stats,
                                                      self.update_description(metric_desc, suffix))
                     self.add_to_list2(self.aws_list2, original_metric_name, metric_stats)
-        matchone = soup.find('table', id="w242aac17c23c15c21b9")
-        rowsone = matchone.findAll('tr')
+        matchone = soup.findAll('table')
+        rowsone = matchone[1].findAll('tr')
         for var in rowsone[1:]:
             colone = var.findAll('td')
             coly = colone[0]
@@ -126,7 +127,7 @@ class AWSS3Extractor:
         os.chdir('CSV_FOLDER')
         with open(CSV_FILE, 'w', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow(METRIC_HEADERS)
+            writer.writerow(mn)
             writer.writerows(self.aws_list)
         os.chdir('..')
 

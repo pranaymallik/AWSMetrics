@@ -13,6 +13,8 @@ METRIC_HEADERS = ["metric_name", "metric Stats"]
 YAML_FILE = "AWS.ELB.yaml"
 CSV_FILE = "AWS.ELB.csv"
 CSV2 = "AWS.stats.ELB.csv"
+mn =  ["metric_name", "metric_type", "interval", "unit_name", "per_unit_name", "description", "orientation",
+                  "integration", "short_name", ]
 CODE_MAP = {
     'DesyncMitigationMode_NonCompliant_Request_Count': 'desync_mitigation_mode_non_compliant_request_count',
     'aws.elbdesync_mitigation_mode__non_compliant__request__count': 'aws.elbdesync_mitigation_mode_non_compliant_request_count',
@@ -176,7 +178,7 @@ class ELBExtractor:
         os.chdir('CSV_METRIC_NAMES')
         with open(CSV2, 'w', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow(METRIC_HEADERS)
+            writer.writerow(mn)
             writer.writerows(self.aws_list2)
         os.chdir('..')
 

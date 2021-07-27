@@ -18,7 +18,8 @@ METRIC_HEADERS = ["metric_name", "metric stats" ]
 YAML_FILE = "AWS.EBS.yaml"
 CSV_FILE = "AWS.EBS.csv"
 CSV2 = "AWS.stats.EBS.csv"
-mn = ['Metric Name']
+MN = ["metric_name", "metric_type", "interval", "unit_name", "per_unit_name", "description", "orientation",
+                  "integration", "short_name", ]
 
 
 
@@ -153,7 +154,7 @@ class AWSEBSExtractor:
         os.chdir('./CSV_FOLDER')
         with open(CSV_FILE, 'w', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow(METRIC_HEADERS)
+            writer.writerow(MN)
             writer.writerows(self.aws_list)
         os.chdir('..')
 
