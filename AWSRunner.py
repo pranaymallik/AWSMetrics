@@ -9,6 +9,10 @@ from AWS_RDS import AWSRDSExtractor
 from AWS_EBS import AWSEBSExtractor
 from AWS_EC2 import AWSEc2Extractor
 from AWS_ELB import ELBExtractor
+from AWS_VPC_NAT import AWSVPC_NATExtractor
+from AWS_VPC_TGW import AWSVPC_TGWExtractor
+from AWS_VPC_VPN import AWSVPC_VPNExtractor
+
 
 CSV_FOLDER = 'CSV_FOLDER'
 YAML_FOLDER = 'YAML_FOLDER'
@@ -121,6 +125,35 @@ if __name__  == '__main__':
     ELBRunner.generate_csv()
     ELBRunner.generate_csv2()
     print("Finished Metric: ELB")
+
+    VPCNatRunner = AWSVPC_NATExtractor('https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway-cloudwatch.html')
+    VPCNatRunner.load_page()
+    VPCNatRunner.process_content()
+    print('Processing Metric: VPC NAT')
+    VPCNatRunner.generate_yaml()
+    VPCNatRunner.generate_csv()
+    VPCNatRunner.generate_csv2()
+    print("Finished Metric: VPC NAT")
+
+
+    VPCTGWRunner = AWSVPC_TGWExtractor('https://docs.aws.amazon.com/vpc/latest/tgw/transit-gateway-cloudwatch-metrics.html')
+    VPCTGWRunner.load_page()
+    VPCTGWRunner.process_content()
+    print('Processing Metric: VPC TGW')
+    VPCTGWRunner.generate_yaml()
+    VPCTGWRunner.generate_csv()
+    VPCTGWRunner.generate_csv2()
+    print("Finished Metric: VPC TGW")
+
+
+    VPCRunner = AWSVPC_VPNExtractor('https://docs.aws.amazon.com/vpn/latest/s2svpn/monitoring-cloudwatch-vpn.html')
+    VPCRunner.load_page()
+    VPCRunner.process_content()
+    print('Processing Metric: VPC VPN')
+    VPCRunner.generate_yaml()
+    VPCRunner.generate_csv()
+    VPCRunner.generate_csv2()
+    print("Finished Metric: VPC VPN")
 
     print("Task Completed Successfully")
 

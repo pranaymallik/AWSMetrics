@@ -1,0 +1,15 @@
+metric name,stats
+ActiveConnectionCount,Statistics: The most useful statistic is Max .
+BytesInFromDestination,Statistics: The most useful statistic is Sum .
+BytesInFromSource,Statistics: The most useful statistic is Sum .
+BytesOutToDestination,Statistics: The most useful statistic is Sum .
+BytesOutToSource,Statistics: The most useful statistic is Sum .
+ConnectionAttemptCount,Statistics: The most useful statistic is Sum .
+ConnectionEstablishedCount,Statistics: The most useful statistic is Sum .
+ErrorPortAllocation,Statistics: The most useful statistic is Sum .
+IdleTimeoutCount,Statistics: The most useful statistic is Sum .
+PacketsDropCount,Statistics: The most useful statistic is Sum .
+PacketsInFromDestination,Statistics: The most useful statistic is Sum .
+PacketsInFromSource,Statistics: The most useful statistic is Sum .
+PacketsOutToDestination,Statistics: The most useful statistic is Sum .
+PacketsOutToSource,Statistics: The most useful statistic is Sum .

@@ -7,4 +7,4 @@
     name: aws.ec2.resource
   - alias: dimension_Class
     name: aws.ec2.class
-  type: ec2
+  type: EC2

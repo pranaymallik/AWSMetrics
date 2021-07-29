@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/AWSMetrics.iml" filepath="$PROJECT_DIR$/.idea/AWSMetrics.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/AWSM.iml" filepath="$PROJECT_DIR$/.idea/AWSM.iml" />
     </modules>
   </component>
 </project>

@@ -1,8 +1,20 @@
 - keys:
-  - alias: dimension_AvailabilityZone
-    name: availability_zone
-  - alias: dimension_FleetRequestId
-    name: fleet_request_id
-  - alias: dimension_InstanceType
-    name: instance_type
+  - alias: dimension_AvailableInstancePoolsCount
+    name: available_instance_pools_count
+  - alias: dimension_BidsSubmittedForCapacity
+    name: bids_submitted_for_capacity
+  - alias: dimension_EligibleInstancePoolCount
+    name: eligible_instance_pool_count
+  - alias: dimension_FulfilledCapacity
+    name: fulfilled_capacity
+  - alias: dimension_MaxPercentCapacityAllocation
+    name: max_percent_capacity_allocation
+  - alias: dimension_PendingCapacity
+    name: pending_capacity
+  - alias: dimension_PercentCapacityAllocation
+    name: percent_capacity_allocation
+  - alias: dimension_TargetCapacity
+    name: target_capacity
+  - alias: dimension_TerminatingCapacity
+    name: terminating_capacity
   type: EC2Spot

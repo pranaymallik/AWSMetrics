@@ -1,8 +1,88 @@
 - keys:
+  - alias: dimension_BucketSizeBytes
+    name: bucket_size_bytes
+  - alias: dimension_NumberOfObjects
+    name: number_of_objects
+  - alias: dimension_AllRequests
+    name: all_requests
+  - alias: dimension_GetRequests
+    name: get_requests
+  - alias: dimension_PutRequests
+    name: put_requests
+  - alias: dimension_DeleteRequests
+    name: delete_requests
+  - alias: dimension_HeadRequests
+    name: head_requests
+  - alias: dimension_PostRequests
+    name: post_requests
+  - alias: dimension_SelectRequests
+    name: select_requests
+  - alias: dimension_SelectBytesScanned
+    name: select_bytes_scanned
+  - alias: dimension_SelectBytesReturned
+    name: select_bytes_returned
+  - alias: dimension_ListRequests
+    name: list_requests
+  - alias: dimension_BytesDownloaded
+    name: bytes_downloaded
+  - alias: dimension_BytesUploaded
+    name: bytes_uploaded
+  - alias: dimension_4xxErrors
+    name: 4xx_errors
+  - alias: dimension_5xxErrors
+    name: 5xx_errors
+  - alias: dimension_FirstByteLatency
+    name: first_byte_latency
+  - alias: dimension_TotalRequestLatency
+    name: total_request_latency
+  - alias: dimension_ReplicationLatency
+    name: replication_latency
+  - alias: dimension_BytesPendingReplication
+    name: bytes_pending_replication
+  - alias: dimension_OperationsPendingReplication
+    name: operations_pending_replication
+  - alias: dimension_OutpostTotalBytes
+    name: outpost_total_bytes
+  - alias: dimension_OutpostFreeBytes
+    name: outpost_free_bytes
+  - alias: dimension_BucketUsedBytes
+    name: bucket_used_bytes
   - alias: dimension_BucketName
-    name: aws.s3.bucket_name
-  - alias: dimension_Storage_Type
-    name: aws.s3.storage_type
-  - alias: dimension_FilterID
-    name: aws.s3.filter_id
+    name: bucket_name
+  - alias: dimension_StorageType
+    name: storage_type
+  - alias: dimension_FilterId
+    name: filter_id
+  - alias: dimension_AllRequests
+    name: aws.s3.all_requests
+  - alias: dimension_GetRequests
+    name: aws.s3.get_requests
+  - alias: dimension_PutRequests
+    name: aws.s3.put_requests
+  - alias: dimension_DeleteRequests
+    name: aws.s3.delete_requests
+  - alias: dimension_HeadRequests
+    name: aws.s3.head_requests
+  - alias: dimension_PostRequests
+    name: aws.s3.post_requests
+  - alias: dimension_SelectRequests
+    name: aws.s3.select_requests
+  - alias: dimension_SelectBytesScanned
+    name: aws.s3.select_bytes_scanned
+  - alias: dimension_SelectBytesReturned
+    name: aws.s3.select_bytes_returned
+  - alias: dimension_ListRequests
+    name: aws.s3.list_requests
+  - alias: dimension_BytesDownloaded
+    name: aws.s3.bytes_downloaded
+  - alias: dimension_BytesUploaded
+    name: aws.s3.bytes_uploaded
+  - alias: dimension_4xxErrors
+    name: aws.s3.4xx_errors
+  - alias: dimension_5xxErrors
+    name: aws.s3.5xx_errors
+  - alias: dimension_FirstByteLatency
+    name: aws.s3.first_byte_latency
+  - alias: dimension_TotalRequestLatency
+    name: aws.s3.total_request_latency
   type: s3

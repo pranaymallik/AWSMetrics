@@ -1,18 +1,2 @@
-- keys:
-  - alias: dimension_DelegatedOperation
-    name: delegated_operation
-  - alias: dimension_GlobalSecondaryIndexName
-    name: global_secondary_index_name
-  - alias: dimension_Operation
-    name: operation
-  - alias: dimension_OperationType
-    name: operation_type
-  - alias: dimension_Verb
-    name: verb
-  - alias: dimension_ReceivingRegion
-    name: receiving_region
-  - alias: dimension_StreamLabel
-    name: stream_label
-  - alias: dimension_TableName
-    name: table_name
-  type: DynamoDB
+- keys: []
+  type: Kinesis
