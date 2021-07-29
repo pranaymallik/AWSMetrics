@@ -1,6 +1,0 @@
-- keys:
-  - alias: dimension_TransitGateway
-    name: aws.vpc_transit_gateway
-  - alias: dimension_TransitGatewayAttachment
-    name: aws.vpc_transit_gateway_attachment
-  type: vpc

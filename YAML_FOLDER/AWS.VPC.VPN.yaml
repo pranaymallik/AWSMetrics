@@ -1,6 +1,0 @@
-- keys:
-  - alias: dimension_VpnId
-    name: aws.vpc.vpn_id
-  - alias: dimension_TunnelIpAddress
-    name: aws.vpc.tunnel_ip_address
-  type: vpc
