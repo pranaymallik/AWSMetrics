@@ -9,11 +9,15 @@ from AWS_RDS import AWSRDSExtractor
 from AWS_EBS import AWSEBSExtractor
 from AWS_EC2 import AWSEc2Extractor
 from AWS_ELB import ELBExtractor
+<<<<<<< HEAD
+from AWS_Route53 import Route53Runner
+=======
 from AWS_VPC_NAT import AWSVPC_NATExtractor
 from AWS_VPC_TGW import AWSVPC_TGWExtractor
 from AWS_VPC_VPN import AWSVPC_VPNExtractor
 
 
+>>>>>>> ead54f43e7cf05ed869ea16ecfb5f16cc9df87ce
 CSV_FOLDER = 'CSV_FOLDER'
 YAML_FOLDER = 'YAML_FOLDER'
 CSV_FOLDER_2 = 'CSV_METRIC_NAMES'
@@ -126,6 +130,20 @@ if __name__  == '__main__':
     ELBRunner.generate_csv2()
     print("Finished Metric: ELB")
 
+<<<<<<< HEAD
+    extractor = Route53Runner('https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/monitoring-cloudwatch.html',
+                              'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/monitoring-hosted-zones-with-cloudwatch.html',
+                              'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/monitoring-resolver-with-cloudwatch.html',
+                              'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/monitoring-resolver-dns-firewall-with-cloudwatch.html')
+    extractor.load_page()
+    extractor.process_content()
+    print('Processing Metric: Route53')
+    extractor.generate_yaml()
+    extractor.generate_csv()
+    print("Finished Metric: Route53")
+
+
+=======
     VPCNatRunner = AWSVPC_NATExtractor('https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway-cloudwatch.html')
     VPCNatRunner.load_page()
     VPCNatRunner.process_content()
@@ -155,6 +173,7 @@ if __name__  == '__main__':
     VPCRunner.generate_csv2()
     print("Finished Metric: VPC VPN")
 
+>>>>>>> ead54f43e7cf05ed869ea16ecfb5f16cc9df87ce
     print("Task Completed Successfully")
 
 
