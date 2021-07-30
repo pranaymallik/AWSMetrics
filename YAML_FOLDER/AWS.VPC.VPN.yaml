@@ -1,0 +1,6 @@
+- keys:
+  - alias: dimension_VpnId
+    name: vpn_id
+  - alias: dimension_TunnelIpAddress
+    name: tunnel_ip_address
+  type: vpc

@@ -1,0 +1,6 @@
+- keys:
+  - alias: dimension_TransitGateway
+    name: transit_gateway
+  - alias: dimension_TransitGatewayAttachment
+    name: transit_gateway_attachment
+  type: vpc
