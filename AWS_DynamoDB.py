@@ -14,7 +14,7 @@ METRIC_HEADERS = ["metric_name", "metric_type", "interval", "unit_name", "per_un
 YAML_FILE = "AWS.DynamoDB.yaml"
 CSV_FILE = "AWS.DynamoDB.csv"
 CSV_FILE_2 = "AWS.stats.DynamoDB.csv"
-TABLE_IDS = ['w557aac27b7c17b7c11b5b7']
+TABLE_IDS = ['w559aac27b7c17b7c11b5b7']
 
 
 class DynamoDB:
