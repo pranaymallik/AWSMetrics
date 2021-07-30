@@ -52,7 +52,7 @@ class AWSEc2Extractor:
         soup = BeautifulSoup(res.text, 'html.parser')
         # match = soup.find('div', {'id': 'main-content'})
         # tbodyone = match.find('tbody')
-        self.aws_dict = {'type': 'EC2', 'keys': []}
+        self.aws_dict = {'type': 'ec2', 'keys': []}
         matchone = soup.findAll('table')
         rows = matchone[0].findAll('tr')
         tableonerows = matchone[1].findAll('tr')
@@ -300,7 +300,7 @@ class AWSEc2Extractor:
             colp = t.findAll('td')
             co = colp[0]
             orig = co.text.strip()
-            metseven = 'aws.ec2.'+self.snake_case(orig)
+            metseven = self.snake_case(orig)
             self.aws_dict['keys'].append(
                 {'name': metseven, 'alias': 'dimension_' + co.text.strip()})
 

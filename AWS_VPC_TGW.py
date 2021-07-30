@@ -79,7 +79,7 @@ class AWSVPC_TGWExtractor:
         for x in rowsthree[1:]:
             c = x.findAll('td')
             ch = c[0].text.strip()
-            met_yaml = 'aws.vpc_'+self.snake_case(ch)
+            met_yaml =self.snake_case(ch)
 
             self.aws_dict['keys'].append(
                 {'name': met_yaml, 'alias': 'dimension_' + ch})

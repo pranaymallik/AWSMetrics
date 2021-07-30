@@ -48,8 +48,7 @@ class AWSS3Extractor:
                 metric_name_snake_case = self.snake_case(original_metric_name)
                 metric_name = 'aws.s3.' + metric_name_snake_case
 
-                self.aws_dict['keys'].append(
-                    {'name': metric_name_snake_case, 'alias': 'dimension_' + original_metric_name})
+
             if cols and len(cols) > 1:
                 col = cols[1]
                 sections = col.findChildren('p', text=True)
@@ -88,13 +87,13 @@ class AWSS3Extractor:
                     self.add_to_list2(self.aws_list2, original_metric_name, metric_stats)
         matchone = soup.findAll('table')
         rowsone = matchone[1].findAll('tr')
+        rowsfour = matchone[4].findAll('tr')
         for var in rowsone[1:]:
             colone = var.findAll('td')
             coly = colone[0]
             ogmet = coly.text.strip()
             met_name = 'aws.s3.' + self.snake_case(ogmet)
-            self.aws_dict['keys'].append(
-                {'name': met_name, 'alias': 'dimension_' + ogmet})
+
             colonetwo = colone[1]
             sec = colonetwo.findChildren('p')
 
@@ -122,6 +121,12 @@ class AWSS3Extractor:
                         idx = idx + 1
 
                     self.add_to_list(self.aws_list, met_name, met_units, "", met_desc, )
+        for t in rowsfour[1:]:
+            colo = t.findAll('td')[0]
+            yamlmetname = self.snake_case(colo.text.strip())
+            ogmetyaml =  colo.text.strip()
+            self.aws_dict['keys'].append(
+                {'name': yamlmetname, 'alias': 'dimension_' + ogmetyaml})
 
     def generate_csv(self):
         os.chdir('CSV_FOLDER')

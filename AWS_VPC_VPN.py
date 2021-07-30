@@ -73,7 +73,7 @@ class AWSVPC_VPNExtractor:
             colt = g.findAll('td')[0]
             colt = colt.text.strip()
             metricyamlname = colt
-            metricnm = 'aws.vpc.'+self.snake_case(colt)
+            metricnm = self.snake_case(colt)
             self.aws_dict['keys'].append(
                 {'name': metricnm, 'alias': 'dimension_' + metricyamlname})
 

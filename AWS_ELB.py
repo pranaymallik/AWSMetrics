@@ -155,7 +155,7 @@ class ELBExtractor:
             colson = l.findAll('td')
             coly = colson[0]
             colones = colson[1]
-            met_nameone = 'aws.elb.' + self.snake_case(coly.text.strip())
+            met_nameone = self.snake_case(coly.text.strip())
             if coly in CODE_MAP.keys():
                 met_nameone = CODE_MAP[coly]
             self.aws_dict['keys'].append(
@@ -184,6 +184,7 @@ class ELBExtractor:
 
     def generate_yaml(self):
         os.chdir('YAML_FOLDER')
+
         with open(YAML_FILE, 'w') as outfile:
             yaml.dump([self.aws_dict], outfile, default_flow_style=False)
         os.chdir('..')

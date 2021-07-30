@@ -56,6 +56,28 @@ class AWSEBSExtractor:
         main_content = soup.findAll('table')
         rows = main_content[0].findAll('tr')
         self.aws_dict = {'type': 'ebs', 'keys': []}
+        main_cont = soup.find('div',id = 'main-col-body')
+        firstp = main_cont.findAll('p')[60].findAll('code')
+        secondp = main_cont.findAll('p')[61].findAll('code')
+        thirdp = main_cont.findAll('p')[62].findAll('code')
+
+        for temp in firstp:
+            first = temp.text.strip()
+            firstname = self.snake_case(first)
+        for tempone in secondp:
+            seco = tempone.text.strip()
+            secondname = self.snake_case(seco)
+        for tempy in thirdp:
+            th = tempy.text.strip()
+            thirdname = self.snake_case(th)
+        self.aws_dict['keys'].append(
+            {'name': firstname, 'alias': 'dimension_' + first})
+        self.aws_dict['keys'].append(
+            {'name': secondname, 'alias': 'dimension_' + seco})
+        self.aws_dict['keys'].append(
+            {'name': thirdname, 'alias': 'dimension_' + th})
+
+
 
         metric_name = ''
         metric_desc = ''
@@ -69,9 +91,6 @@ class AWSEBSExtractor:
             if original_metric_name in CODE_MAP.keys():
                 metric_name = CODE_MAP[original_metric_name]
             # if metric_name ==
-            self.aws_dict['keys'].append(
-                {'name': metric_name, 'alias': 'dimension_' + original_metric_name})
-            # print(metric_name)
             coltwo = cols[1]
             sections = coltwo.findChildren('p')
             if sections and len(sections) > 0:
@@ -107,9 +126,8 @@ class AWSEBSExtractor:
             cole = colone[0]
             ogmetricname = cole.text.strip()
             self.aws_list2.append([ogmetricname])
-            metricnameone = 'aws.Ebs.' + self.snake_case(cole.text.strip())
-            self.aws_dict['keys'].append(
-                {'name': metricnameone, 'alias': 'dimension_' + ogmetricname})
+            metricnameone = self.snake_case(cole.text.strip())
+
             # print(metricnameone)
             coles = colone[1]
             sectionone = coles.findChildren('p')
@@ -135,8 +153,7 @@ class AWSEBSExtractor:
             metricnameoneone = 'aws.Ebs.' + self.snake_case(coless.text.strip())
             if ogonemetricname in CODE_MAP.keys():
                 metricnameoneone = 'aws.Ebs.'+CODE_MAP[ogonemetricname]
-            self.aws_dict['keys'].append(
-                {'name': metricnameoneone, 'alias': 'dimension_' + ogonemetricname})
+
             # print(metricnameone)
             colesthree = coloneone[1]
             sectiononetwo = colesthree.findChildren('p')
@@ -149,6 +166,7 @@ class AWSEBSExtractor:
             self.add_to_list(self.aws_list, metricnameoneone + "_min_", "", metricdesconeone + "_min_")
             self.add_to_list(self.aws_list, metricnameoneone + "_max_", "", metricdesconeone + "_max_")
             self.add_to_list(self.aws_list, metricnameoneone + "_avg_", "", metricdesconeone + "_avg_")
+
 
     def generate_csv(self):
         os.chdir('./CSV_FOLDER')
