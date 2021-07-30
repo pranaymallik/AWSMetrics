@@ -1,4 +1,4 @@
-metric_name,metric_unit,description
+metric_name,metric_type,interval,unit_name,per_unit_name,description,orientation,integration,short_name
 aws.ec2.cpu_utilization,guage,,,,"Depending on the instance type, tools in your operating system can show a lower percentage than CloudWatch when the instance is not allocated a full processor core.",,ec2,
 aws.ec2.disk_read_ops,count,,,,"If there are no instance store volumes, either the value is 0 or the metric is not reported.",,ec2,
 aws.ec2.disk_write_ops,count,,,,"If there are no instance store volumes, either the value is 0 or the metric is not reported.",,ec2,

@@ -1,4 +1,4 @@
-Metric Name,Metric Stats
+metric_name,metric_type,interval,unit_name,per_unit_name,description,orientation,integration,short_name
 CPUUtilization,
 DiskReadOps,
 DiskWriteOps,
