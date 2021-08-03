@@ -1,0 +1,21 @@
+Metric Name,Valid Statistics
+ChildHealthCheckHealthyCount,"Average, Minimum, Maximum"
+ConnectionTime,"Average, Minimum, Maximum"
+HealthCheckPercentageHealthy,"Average, Minimum, Maximum"
+HealthCheckStatus,Minimum
+SSLHandshakeTime,"Average, Minimum, Maximum"
+TimeToFirstByte,"Average, Minimum, Maximum"
+DNSQueries,"Sum, SampleCount"
+DNSSECInternalFailure,N/A
+DNSSECKeySigningKeysNeedingAction,"Sum, SampleCount"
+DNSSECKeySigningKeyMaxNeedingActionAge,N/A
+DNSSECKeySigningKeyAge,N/A
+EndpointHealthyENICount," Minimum, Maximum, Average                                          "
+EndpointUnHealthyENICount," Minimum, Maximum, Average                                          "
+InboundQueryVolume, Sum
+OutboundQueryVolume, Sum
+OutboundQueryAggregateVolume, Sum
+FirewallRuleGroupQueryVolume, Sum
+VPCFirewallQueryVolume, Sum
+FirewallRuleGroupVpcQueryVolume, Sum
+FirewallRuleGroupVpcQueryVolume, Sum
