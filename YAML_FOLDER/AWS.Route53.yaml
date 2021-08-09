@@ -1,22 +1,22 @@
 - keys:
-  - alias: dimension_HealthCheckId
-    name: health_check_id
-  - alias: dimension_ConnectionTime
-    name: connection_time
-  - alias: dimension_SSLHandshakeTime
-    name: s_s_l_handshake_time
-  - alias: dimension_TimeToFirstByte
-    name: time_to_first_byte
-  - alias: dimension_Region
-    name: region
-  - alias: dimension_HostedZoneId
-    name: hosted_zone_id
-  - alias: dimension_EndpointId
-    name: endpoint_id
-  - alias: dimension_FirewallRuleGroupId
-    name: firewall_rule_group_id
-  - alias: dimension_VpcId
-    name: vpc_id
-  - alias: dimension_FirewallDomainListId
-    name: firewall_domain_list_id
+  - name: health_check_id
+    alias: dimension_HealthCheckId
+  - name: connection_time
+    alias: dimension_ConnectionTime
+  - name: s_s_l_handshake_time
+    alias: dimension_SSLHandshakeTime
+  - name: time_to_first_byte
+    alias: dimension_TimeToFirstByte
+  - name: region
+    alias: dimension_Region
+  - name: hosted_zone_id
+    alias: dimension_HostedZoneId
+  - name: endpoint_id
+    alias: dimension_EndpointId
+  - name: firewall_rule_group_id
+    alias: dimension_FirewallRuleGroupId
+  - name: vpc_id
+    alias: dimension_VpcId
+  - name: firewall_domain_list_id
+    alias: dimension_FirewallDomainListId
   type: Route53
