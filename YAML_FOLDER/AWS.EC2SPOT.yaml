@@ -1,8 +1,8 @@
 - keys:
-  - alias: dimension_AvailabilityZone
-    name: availability_zone
-  - alias: dimension_FleetRequestId
-    name: fleet_request_id
-  - alias: dimension_InstanceType
-    name: instance_type
+  - name: availability_zone
+    alias: dimension_AvailabilityZone
+  - name: fleet_request_id
+    alias: dimension_FleetRequestID
+  - name: instance_type
+    alias: dimension_InstanceType
   type: EC2Spot
