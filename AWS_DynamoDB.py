@@ -24,6 +24,7 @@ class DynamoDB:
         self.aws_dict = {}
         self.aws_list = []
         self.aws_metric_names = []
+        self.mapping_names = []
 
     def load_page(self):
         page = requests.get(self.url)
@@ -55,7 +56,7 @@ class DynamoDB:
                     original_metric_name = col.text.strip()
                     #print(original_metric_name)
                     metric_name_snake_case = self.snake_case(original_metric_name.replace('.', ''))
-                    metric_name = 'aws.DynamoDB.' + metric_name_snake_case
+                    metric_name = 'aws.dynamodb.' + metric_name_snake_case
 
                     self.aws_dict['keys'].append(
                         {'name': metric_name_snake_case, 'alias': 'dimension_' + original_metric_name})
@@ -123,7 +124,16 @@ class DynamoDB:
             writer.writerows(self.aws_metric_names)
         os.chdir('..')
 
-
+    def generate_mapping(self):
+        os.chdir('./MAPPING_FOLDER')
+        f = open('AWS.DynamoDB.mapping', 'w', newline='')
+        for i in self.aws_list:
+            string = i[0].replace('aws.','')+" "+i[0].replace('.','_')
+            f.write(string)
+            f.write('\n')
+            self.mapping_names.append([string])
+        f.close()
+        os.chdir('..')
 
     def generate_yaml(self):
         path1 = './YAML_FOLDER'
@@ -158,4 +168,5 @@ if __name__ == "__main__":
     extractor.load_page()
     extractor.process_content()
     extractor.generate_yaml()
+    extractor.generate_mapping()
     extractor.generate_csv()

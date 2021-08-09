@@ -29,6 +29,7 @@ class Route53Runner:
         self.aws_dict = {}
         self.aws_list = []
         self.aws_metric_names = []
+        self.mapping_names = []
 
     def load_page(self):
         page = requests.get(self.url1)
@@ -195,13 +196,16 @@ class Route53Runner:
             stringName = metricName
             stringName = stringName.replace('DNS', 'dns')
             stringName = stringName.replace('SEC', 'Sec')
-            self.add_to_list(self.aws_list, 'aws.Route53.' + self.snake_case(stringName), metricUnits[i],
+            stringName = stringName.replace('SSL', 'Ssl')
+            stringName = stringName.replace('ENI', 'Eni')
+
+            self.add_to_list(self.aws_list, 'aws.route53.' + self.snake_case(stringName), metricUnits[i],
                              metricStats[i], metricDesc[i])
             i += 1
        # print(newvar)
         print(dimensionsx)
         for dd in dimensionsx:
-            self.aws_dict['keys'].append( {'name': self.snake_case(dd), 'alias': 'dimension_' + dd})
+            self.aws_dict['keys'].append( {' name': self.snake_case(dd), 'alias': 'dimension_' + dd})
 
     def generate_csv(self):
         path1 = './CSV_FOLDER'
@@ -247,6 +251,17 @@ class Route53Runner:
         else:
             return input_string
 
+    def generate_mapping(self):
+        os.chdir('./MAPPING_FOLDER')
+        f = open('AWS.Route53.mapping', 'w', newline='')
+        for i in self.aws_list:
+            string = i[0].replace('aws.','')+" "+i[0].replace('.','_')
+            f.write(string)
+            f.write('\n')
+            self.mapping_names.append([string])
+        f.close()
+        os.chdir('..')
+
 
 if __name__ == "__main__":
     extractor = Route53Runner('https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/monitoring-cloudwatch.html',
@@ -256,4 +271,5 @@ if __name__ == "__main__":
     extractor.load_page()
     extractor.process_content()
     extractor.generate_yaml()
+    extractor.generate_mapping()
     extractor.generate_csv()

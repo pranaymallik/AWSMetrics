@@ -22,6 +22,7 @@ class LambdaExtractor:
         self.aws_dict = {}
         self.aws_list = []
         self.aws_metric_names = []
+        self.mapping_names = []
 
     def load_page(self):
         page = requests.get(self.url)
@@ -116,10 +117,22 @@ class LambdaExtractor:
         else:
             return input_string
 
+    def generate_mapping(self):
+        os.chdir('./MAPPING_FOLDER')
+        f = open('AWS.Lambda.mapping', 'w', newline='')
+        for i in self.aws_list:
+            string = i[0].replace('aws.','')+" "+i[0].replace('.','_')
+            f.write(string)
+            f.write('\n')
+            self.mapping_names.append([string])
+        f.close()
+        os.chdir('..')
+
 
 if __name__ == "__main__":
     extractor = LambdaExtractor('https://docs.aws.amazon.com/lambda/latest/dg/monitoring-metrics.html')
     extractor.load_page()
     extractor.process_content()
     extractor.generate_yaml()
+    extractor.generate_mapping()
     extractor.generate_csv()
