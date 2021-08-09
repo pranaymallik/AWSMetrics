@@ -1,2 +1,4 @@
 - keys:
+  - name: group_min_size
+    alias: dimension_AutoScalingGroupName
   type: EC2AutoScaling
