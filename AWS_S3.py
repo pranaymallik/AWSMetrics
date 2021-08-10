@@ -139,23 +139,24 @@ class AWSS3Extractor:
                                 met_units = 'count'
 
                         idx = idx + 1
-                    self.add_to_list(self.aws_list, metric_name, met_units, met_stats, met_desc, )
-                    self.add_to_list(self.aws_list, met_name, met_units, met_stats, met_desc, )
-                    self.add_to_list(self.aws_list, met_name, met_units, met_stats, met_desc, )
-                    self.add_to_list(self.aws_list, met_name, met_units, met_stats, met_desc, )
+
                     self.add_to_list2(self.aws_list2, ogmet, met_stats)
+                    if metric_name.endswith('latency'):
+                        self.add_to_list(self.aws_list, met_name + '.' + suffix, met_units,
+                                         met_stats,
+                                         self.update_description(met_desc, suffix))
                     self.mapping.append('s3.' + met_name.replace('aws.s3.','')+' '
                                              'aws_s3_' +met_name.replace('aws.s3.',''))
 
 
-        print(self.mapping)
+        #print(self.mapping)
         for t in rowsfour[1:]:
             colo = t.findAll('td')[0]
             yamlmetname = self.snake_case(colo.text.strip())
             ogmetyaml =  colo.text.strip()
             self.aws_dict['keys'].append(
                 {'name': yamlmetname, 'alias': 'dimension_' + ogmetyaml})
-        print(self.mapping)
+        #print(self.mapping)
 
     def generate_csv(self):
         os.chdir('CSV_FOLDER')
