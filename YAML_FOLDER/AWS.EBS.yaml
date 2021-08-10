@@ -1,10 +1,9 @@
 - keys:
-    - alias: dimension_VolumeID
-      name: aws.ebs.volume_id
-    - alias: dimension_SnapshotID
-      name: aws.ebs.snapshot_id
-    - alias: dimension_AvailabilityZone
-      name: aws.ebs.availability_zone
+  - name: volume_id
+    alias: dimension_VolumeId
+  - name: volume_id
+    alias: dimension_VolumeId
+  - name: availability_zone
+    alias: dimension_AvailabilityZone
+
   type: ebs
-
-

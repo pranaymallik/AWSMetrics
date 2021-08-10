@@ -1,6 +1,6 @@
 - keys:
-  - alias: dimension_AvailabilityZone
-    name: aws.elb.availability_zone
-  - alias: dimension_LoadBalancerName
-    name: aws.elb.load_balancer_name
+  - name: availability_zone
+    alias: dimension_AvailabilityZone
+  - name: load_balancer_name
+    alias: dimension_LoadBalancerName
   type: elb
