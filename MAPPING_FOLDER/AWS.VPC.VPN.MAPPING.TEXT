@@ -1,0 +1,3 @@
+vpc.tunnel_state aws_vpc_tunnel_state
+vpc.tunnel_data_in aws_vpc_tunnel_data_in
+vpc.tunnel_data_out aws_vpc_tunnel_data_out

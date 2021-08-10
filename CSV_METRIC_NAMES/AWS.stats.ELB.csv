@@ -1,16 +1,19 @@
-metric_name,metric_type,interval,unit_name,per_unit_name,description,orientation,integration,short_name
-BackendConnectionErrors
-DesyncMitigationMode_NonCompliant_Request_Count
-HealthyHostCount
-"HTTPCode_Backend_2XX,                                                   HTTPCode_Backend_3XX,                                                   HTTPCode_Backend_4XX,                                                   HTTPCode_Backend_5XX"
-HTTPCode_ELB_4XX
-HTTPCode_ELB_5XX
-Latency
-RequestCount
-SpilloverCount
-SurgeQueueLength
-UnHealthyHostCount
-EstimatedALBActiveConnectionCount
-EstimatedALBConsumedLCUs
-EstimatedALBNewConnectionCount
-EstimatedProcessedBytes
+metric_name,metric Stats
+BackendConnectionErrors,None
+DesyncMitigationMode_NonCompliant_Request_Count,None
+HealthyHostCount,None
+HTTPCode_Backend_2XX,None
+HTTPCode_Backend_3XX,None
+HTTPCode_Backend_4XX,None
+HTTPCode_Backend_5XX,None
+HTTPCode_ELB_4XX,None
+HTTPCode_ELB_5XX,None
+Latency,None
+RequestCount,None
+SpilloverCount,None
+SurgeQueueLength,None
+UnHealthyHostCount,None
+EstimatedALBActiveConnectionCount,None
+EstimatedALBConsumedLCUs,None
+EstimatedALBNewConnectionCount,None
+EstimatedProcessedBytes,None

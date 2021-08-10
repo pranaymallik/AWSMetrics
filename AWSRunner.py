@@ -48,6 +48,7 @@ if __name__  == '__main__':
     DynamoDBrunner.process_content()
     # DynamoDBrunner.generate_yaml()
     DynamoDBrunner.generate_csv()
+    DynamoDBrunner.generate_mapping()
     print("Finished Metric: DynamoDB")
 
     EC2AutoRunner = EC2AutoExtractor('https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-instance-monitoring.html')
@@ -56,6 +57,7 @@ if __name__  == '__main__':
     print("Processing Metric: EC2AutoScaling")
     # EC2AutoRunner.generate_yaml()
     EC2AutoRunner.generate_csv()
+    EC2AutoRunner.generate_mapping()
     print("Finished Metric: EC2AutoScaling")
 
     EC2SpotRunner = EC2SpotExtractor('https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-fleet-cloudwatch-metrics.html')
@@ -64,6 +66,7 @@ if __name__  == '__main__':
     print("Processing Metric: EC2Spot")
     # EC2SpotRunner.generate_yaml()
     EC2SpotRunner.generate_csv()
+    EC2SpotRunner.generate_mapping()
     print("Finished Metric: EC2Spot")
 
     KinesisRunner = Kinesis('https://docs.aws.amazon.com/streams/latest/dev/monitoring-with-cloudwatch.html')
@@ -72,6 +75,7 @@ if __name__  == '__main__':
     print("Processing Metric: Kinesis")
     # KinesisRunner.generate_yaml()
     KinesisRunner.generate_csv()
+    KinesisRunner.generate_mapping()
     print("Finished Metric: Kinesis")
 
     LambaRunner = LambdaExtractor('https://docs.aws.amazon.com/lambda/latest/dg/monitoring-metrics.html')
@@ -80,6 +84,7 @@ if __name__  == '__main__':
     print("Processing Metric: Lambda")
     # LambaRunner.generate_yaml()
     LambaRunner.generate_csv()
+    LambaRunner.generate_mapping()
     print("Finished Metric: Lambda")
 
     S3Runner = AWSS3Extractor('https://docs.aws.amazon.com/AmazonS3/latest/userguide/metrics-dimensions.html')
@@ -89,6 +94,7 @@ if __name__  == '__main__':
     #S3Runner.generate_yaml()
     S3Runner.generate_csv()
     S3Runner.generate_csv2()
+    S3Runner.generateMapping()
     print("Finished Metric: S3")
 
     RDSRunner = AWSRDSExtractor('https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/monitoring-cloudwatch.html')
@@ -98,6 +104,7 @@ if __name__  == '__main__':
     #RDSRunner.generate_yaml()
     RDSRunner.generate_csv()
     RDSRunner.generate_csv2()
+    RDSRunner.generateMapping()
     print("Finished Metric: RDS")
 
     EBSRunner = AWSEBSExtractor('https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using_cloudwatch_ebs.html')
@@ -107,6 +114,7 @@ if __name__  == '__main__':
     #EBSRunner.generate_yaml()
     EBSRunner.generate_csv()
     EBSRunner.generate_csv2()
+    EBSRunner.generateMapping()
     print("Finished Metric: EBS")
 
     EC2Runner = AWSEc2Extractor('https://docs.aws.amazon.com/AmazonS3/latest/userguide/metrics-dimensions.html')
@@ -116,6 +124,7 @@ if __name__  == '__main__':
     #EC2Runner.generate_yaml()
     EC2Runner.generate_csv()
     EC2Runner.generate_csv2()
+    EC2Runner.generateMapping()
     print("Finished Metric: EC2")
 
     ELBRunner = ELBExtractor('https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-cloudwatch-metrics.html')
@@ -125,6 +134,7 @@ if __name__  == '__main__':
     #ELBRunner.generate_yaml()
     ELBRunner.generate_csv()
     ELBRunner.generate_csv2()
+    ELBRunner.generateMapping()
     print("Finished Metric: ELB")
 
     extractor = Route53Runner('https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/monitoring-cloudwatch.html',
@@ -136,6 +146,7 @@ if __name__  == '__main__':
     print('Processing Metric: Route53')
     #extractor.generate_yaml()
     extractor.generate_csv()
+    extractor.generate_mapping()
     print("Finished Metric: Route53")
 
 
@@ -146,6 +157,7 @@ if __name__  == '__main__':
     #VPCNatRunner.generate_yaml()
     VPCNatRunner.generate_csv()
     VPCNatRunner.generate_csv2()
+    VPCNatRunner.generateMapping()
     print("Finished Metric: VPC NAT")
 
 
@@ -156,6 +168,7 @@ if __name__  == '__main__':
     #VPCTGWRunner.generate_yaml()
     VPCTGWRunner.generate_csv()
     VPCTGWRunner.generate_csv2()
+    VPCTGWRunner.generateMapping()
     print("Finished Metric: VPC TGW")
 
 
@@ -166,6 +179,7 @@ if __name__  == '__main__':
     #VPCRunner.generate_yaml()
     VPCRunner.generate_csv()
     VPCRunner.generate_csv2()
+    VPCRunner.generateMapping()
     print("Finished Metric: VPC VPN")
 
     print("Task Completed Successfully")
