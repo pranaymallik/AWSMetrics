@@ -1,24 +1,24 @@
 metric_name,metric stats
-VolumeReadBytes
-VolumeWriteBytes
-VolumeReadOps
-VolumeWriteOps
-VolumeTotalReadTime
-VolumeTotalWriteTime
-VolumeIdleTime
-VolumeQueueLength
-VolumeThroughputPercentage
-VolumeConsumedReadWriteOps
-BurstBalance
-FastSnapshotRestoreCreditsBucketSize
-FastSnapshotRestoreCreditsBalance
-Read Bandwidth (KiB/s)
-Write Bandwidth (KiB/s)
-Read Throughput (IOPS)
-Write Throughput (IOPS)
-Avg Queue Length (Operations)
-% Time Spent Idle
-Avg Read Size (KiB/Operation)
-Avg Write Size (KiB/Operation)
-Avg Read Latency (ms/Operation)
-Avg Write Latency (ms/Operation)
+VolumeReadBytes,None
+VolumeWriteBytes,None
+VolumeReadOps,None
+VolumeWriteOps,None
+VolumeTotalReadTime,None
+VolumeTotalWriteTime,None
+VolumeIdleTime,None
+VolumeQueueLength,None
+VolumeThroughputPercentage,None
+VolumeConsumedReadWriteOps,None
+BurstBalance,None
+FastSnapshotRestoreCreditsBucketSize,None
+FastSnapshotRestoreCreditsBalance,None
+Read Bandwidth (KiB/s),None
+Write Bandwidth (KiB/s),None
+Read Throughput (IOPS),None
+Write Throughput (IOPS),None
+Avg Queue Length (Operations),None
+% Time Spent Idle,None
+Avg Read Size (KiB/Operation),None
+Avg Write Size (KiB/Operation),None
+Avg Read Latency (ms/Operation),None
+Avg Write Latency (ms/Operation),None

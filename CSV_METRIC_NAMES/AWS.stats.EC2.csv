@@ -1,29 +1,29 @@
-metric_name,metric_type,interval,unit_name,per_unit_name,description,orientation,integration,short_name
-CPUUtilization,
-DiskReadOps,
-DiskWriteOps,
-DiskReadBytes,
-DiskWriteBytes,
-MetadataNoToken,
-NetworkIn,
-NetworkOut,
-NetworkPacketsIn," Minimum, Maximum, Average"
-NetworkPacketsOut," Minimum, Maximum, Average"
-CPUCreditUsage,
-CPUCreditBalance,
-CPUSurplusCreditBalance,
-CPUSurplusCreditsCharged,
-EBSReadOps,
-EBSWriteOps,
-EBSReadBytes,
-EBSWriteBytes,
-EBSIOBalance%,
-EBSByteBalance%,
-StatusCheckFailed,
-StatusCheckFailed_Instance,
-StatusCheckFailed_System,
-AutoScalingGroupName,
-ImageId,
-InstanceId,
-InstanceType,
-ResourceCount,
+Metric Name,Metric Stats
+CPUUtilization,None
+DiskReadOps,None
+DiskWriteOps,None
+DiskReadBytes,None
+DiskWriteBytes,None
+MetadataNoToken,None
+NetworkIn,None
+NetworkOut,None
+NetworkPacketsIn,"Minimum, Maximum, Average"
+NetworkPacketsOut,"Minimum, Maximum, Average"
+CPUCreditUsage,None
+CPUCreditBalance,None
+CPUSurplusCreditBalance,None
+CPUSurplusCreditsCharged,None
+EBSReadOps,None
+EBSWriteOps,None
+EBSReadBytes,None
+EBSWriteBytes,None
+EBSIOBalance%,None
+EBSByteBalance%,None
+StatusCheckFailed,None
+StatusCheckFailed_Instance,None
+StatusCheckFailed_System,None
+AutoScalingGroupName,None
+ImageId,None
+InstanceId,None
+InstanceType,None
+ResourceCount,None
