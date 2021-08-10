@@ -1,11 +1,10 @@
 - keys:
-    - name: db_insance_identifier
-      alias: dimension_db_insance_identifier
-    - name: database_class
-      alias: dimension_database_class
-    - name: engine_name
-      alias: dimension_engine_name
-    - name: source_region
-      alias: dimension_source_region
-
+  - alias: dimension_DBInstanceIdentifier
+    name: db_instance_identifier
+  - alias: dimension_DatabaseClass
+    name: burst_balance
+  - alias: dimension_EngineName
+    name: engine_name
+  - alias: dimension_SourceRegion
+    name: source_region
   type: rds

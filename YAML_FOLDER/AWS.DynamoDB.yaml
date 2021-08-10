@@ -16,3 +16,5 @@
   - name: table_name
     alias: dimension_TableName
   type: DynamoDB
+
+

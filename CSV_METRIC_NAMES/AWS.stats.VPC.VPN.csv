@@ -1,4 +1,4 @@
 metric name,metric_stats
-TunnelState,None
-TunnelDataIn,None
-TunnelDataOut,None
+TunnelState
+TunnelDataIn
+TunnelDataOut

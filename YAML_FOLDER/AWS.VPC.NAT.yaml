@@ -1,4 +1,4 @@
 - keys:
-  - name: nat_gateway_id
-    alias: dimension_NatGatewayId
+  - alias: dimension_NatGatewayId
+    name: nat_gateway_id
   type: vpc
