@@ -119,8 +119,8 @@ class AWSEBSExtractor:
 
 
                     idx = idx + 1
-                self.mapping.append('ebs.' + self.snake_case(original_metric_name)+' '+
-                                     'aws_ebs_' + self.snake_case(original_metric_name))
+                self.mapping.append('ebs.' + self.snake_case(metric_name).replace('aws.ebs.','')+' '+
+                                     'aws_ebs_' + self.snake_case(metric_name).replace('aws.ebs.',''))
 
                 self.add_to_list(self.aws_list, metric_name, metric_units, metric_desc)
                 self.add_to_list(self.aws_list, metric_name + ".minimum", metric_units, metric_desc)
@@ -151,8 +151,8 @@ class AWSEBSExtractor:
                     metricdescone = var16
 
 
-                self.mapping.append('ebs.' + self.snake_case(ogmetricname)+' '+
-                                        'aws_ebs_' + self.snake_case(ogmetricname))
+                self.mapping.append('ebs.' + self.snake_case(metricnameone).replace('aws.ebs.','')+
+                                        'aws_ebs_' + self.snake_case(metricnameone).replace('aws.ebs.',''))
 
                 self.add_to_list(self.aws_list, metricnameone, "gauge", metricdescone)
                 self.add_to_list(self.aws_list, metricnameone + ".minimum", "gauge", metricdescone )
