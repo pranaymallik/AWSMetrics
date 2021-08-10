@@ -8,6 +8,7 @@ import os
 UNITS_ = 'Units:'
 VALID_STATISTICS_ = 'Valid statistics:'
 LATENCY_VALUES = ['minimum', 'maximum', 'p50', 'p90', 'p95', 'p99', 'p99.99']
+MAPPING_FILE = 'AWS.RDS.MAPPING.TEXT'
 
 METRIC_HEADERS = ["metric_name", "metric_type", "interval", "unit_name", "per_unit_name", "description", "orientation",
                   "integration", "short_name", ]
@@ -35,6 +36,7 @@ class AWSRDSExtractor:
         self.aws_dict = {}
         self.aws_list = []
         self.aws_listtwo = []
+        self.mapping = []
 
     def load_page(self):
         page = requests.get(self.url)
@@ -73,8 +75,16 @@ class AWSRDSExtractor:
                 colsconsole = cols[1]
                 if 'instances' not in colsconsole:
                     metric_console_name = colsconsole.text.strip()
-                colsdesc = cols[2]
-                metric_desc = colsdesc.text.strip()
+                colsdesc = cols[2].findChildren('p')
+                #metric_desc = colsdesc.text.strip().replace('\n','').replace('\t','')
+                for sect in colsdesc:
+                    descriptions = sect.findAll(text=True)
+                    var1 = ' '.join(descriptions)
+                    var1 = var1.replace('\n', '')
+                    var2 = ' '.join(var1.split())
+                metric_desc = var2
+
+
                 metric_units = cols[3].text.strip()
                 if 'Count' not in metric_units:
                     metric_units = 'guage'
@@ -83,6 +93,9 @@ class AWSRDSExtractor:
                 else:
                     metric_units = 'count'
                 self.add_to_list(self.aws_list, metric_name, metric_units, metric_desc)
+                self.mapping.append('rds.' + metric_name.replace('aws.rds.', '')+' '+
+                                     'aws_rds_' + metric_name.replace('aws.rds.', ''))
+        #print(self.mapping)
         for h in mat[1:]:
             colv = h.findAll('td')
             codv = colv[0].find('code')
@@ -107,7 +120,12 @@ class AWSRDSExtractor:
             write.writerows(self.aws_listtwo)
         os.chdir('..')
 
-
+    def generateMapping(self):
+        os.chdir('MAPPING_FOLDER')
+        with open(MAPPING_FILE, 'w') as filehandle:
+            for listitem in self.mapping:
+                filehandle.write(str(listitem)+'\n')
+        os.chdir('..')
 
     def generate_yaml(self):
         os.chdir('YAML_FOLDER')
@@ -123,7 +141,7 @@ class AWSRDSExtractor:
     @staticmethod
     def add_to_list2(aws_list, metric_name,):
         # print(metric_name, '||', metric_type, "||", description, )
-        aws_list.append([metric_name])
+        aws_list.append([metric_name,"None"])
 
     @staticmethod
     def snake_case(input_string):
@@ -140,3 +158,4 @@ if __name__ == "__main__":
     extractor.generate_yaml()
     extractor.generate_csv()
     extractor.generate_csv2()
+    extractor.generateMapping()

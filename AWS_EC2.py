@@ -10,6 +10,7 @@ UNITS_ = 'Units:'
 CSV_FILE = 'AWS.EC2.csv'
 CSV2 = 'AWS.stats.EC2.csv'
 YAML_File = 'AWS.EC2.yaml'
+MAPPING_FILE = 'AWS.EC2.MAPPING.TEXT'
 METRIC_HEADERS = ["metric_name", "metric_type", "interval", "unit_name", "per_unit_name", "description", "orientation",
                   "integration", "short_name", ]
 lineadder = ['Minimum', 'Maximum', 'Average']
@@ -27,7 +28,9 @@ CODE_MAP = {
     'EBSWriteBytes': 'aws.ec2.ebs_write_bytes',
     'EBSReadBytes': 'aws.ec2.ebs_read_bytes',
     'EBSIobalance%': 'aws.ec2.ebs_iobalance%',
-    'EBSBytesbalance%': 'aws.ec2.ebs_byte_balance%'
+    'EBSBytesbalance%': 'aws.ec2.ebs_byte_balance%',
+    '" Minimum, Maximum, Average"':'Minimum, Maximum, Average'
+
 }
 
 
@@ -39,6 +42,8 @@ class AWSEc2Extractor:
         self.aws_dict = {}
         self.aws_list = []
         self.aws_list2 = []
+        self.mapping = []
+        self.yaml = []
 
     def load_page(self):
         page = requests.get(self.url)
@@ -68,6 +73,7 @@ class AWSEc2Extractor:
                 col = cols[0]
                 ogmetric_name = col.text.strip()
                 metric_name = 'aws.ec2.' + self.convertToSnakeCase(ogmetric_name)
+
                 met_desc = ''
                 met_unit = ''
                 met_stats = ''
@@ -95,14 +101,25 @@ class AWSEc2Extractor:
                                 met_unit = 'count'
                         elif var2.startswith('Statistics'):
                             met_stats = var2
-                            met_stats = var2.replace('Statistics:','')
+                            met_stats = var2.replace('Statistics:','').replace('"','')
+                            if met_stats in CODE_MAP.keys():
+                                met_stats = CODE_MAP[met_stats]
+                        if met_stats =='':
+                            met_stats = 'None'
+
                         idx + idx + 1
                     self.add_to_list(self.aws_list, metric_name, met_unit, met_desc)
+                    if ' Minimum, Maximum, Average'in met_stats:
+                        met_stats = 'Minimum, Maximum, Average'
+                    print(met_stats)
                     self.aws_list2.append([ogmetric_name,met_stats])
+                    self.mapping.append('ec2.'+self.convertToSnakeCase(metric_name).replace('aws.ec2.','')+' '+'aws_ec2_'+self.convertToSnakeCase(metric_name).replace('aws.ec2.',''))
+
                     if met_stats:
-                        self.add_to_list(self.aws_list, metric_name + "_min", met_unit, met_desc + "_min")
-                        self.add_to_list(self.aws_list, metric_name + "_max", met_unit, met_desc + "_max")
-                        self.add_to_list(self.aws_list, metric_name + "_avg", met_unit, met_desc + "_avg")
+                        self.add_to_list(self.aws_list, metric_name + ".minimum", met_unit, met_desc + ".minimum")
+                        self.add_to_list(self.aws_list, metric_name + ".maximum", met_unit, met_desc + ".maximum")
+                        self.add_to_list(self.aws_list, metric_name + ".average", met_unit, met_desc + ".average")
+
 
                     # print(metric_name+" : ",met_desc," : "+met_unit)
 
@@ -134,20 +151,21 @@ class AWSEc2Extractor:
                         elif vary.startswith('Units'):
                             met_unitone = vary
                             if 'Count' not in met_unitone:
-                                met_unitone = 'guage'
+                                met_unitone = 'gauge'
                             else:
                                 met_unitone = 'count'
                         idx + idx + 1
                     self.add_to_list(self.aws_list, metric_namethree, met_unitone, met_descone)
-                    self.aws_list2.append([ogmetricthree_name,""])
-
-
+                    self.aws_list2.append([ogmetricthree_name,"None"])
+                    self.mapping.append('ec2.' + self.convertToSnakeCase(metric_namethree).replace('aws.ec2.','')+ ' '+
+                                        'aws_ec2_' + self.convertToSnakeCase(metric_namethree).replace('aws.ec2.',''))
 
         for j in tabletworows[1:]:
             colstwo = j.findAll('td')
             if colstwo and len(colstwo) > 0:
                 met_desctwo = ''
                 met_units2 = ''
+                met_stat = ''
                 coltwo = colstwo[0]
                 ogmetrictwo_name = coltwo.text.strip()
                 metric_nametwo = 'aws.ec2.' + self.convertToSnakeCase(ogmetrictwo_name)
@@ -174,13 +192,26 @@ class AWSEc2Extractor:
                         elif vara.startswith('Units'):
                             met_units2 = vara
                             if 'Count' not in met_units2:
-                                met_units2 = 'guage'
+                                met_units2 = 'gauge'
                             else:
                                 met_units2 = 'count'
+                            if met_units2 == "":
+                                met_units2 = 'gauge'
+                        elif 'statistic' in vara:
+                            met_stat = vara
                         idx = idx + 1
 
-                    self.add_to_list(self.aws_list, metric_nametwo, met_units2, met_desctwo)
-                    self.aws_list2.append([ogmetrictwo_name, ""])
+                    self.add_to_list(self.aws_list, metric_nametwo,'gauge', met_desctwo)
+                    if met_stat:
+                        self.add_to_list(self.aws_list, metric_nametwo+'.minimum','gauge', met_desctwo)
+                        self.add_to_list(self.aws_list, metric_nametwo+'.maximum','gauge', met_desctwo)
+                        self.add_to_list(self.aws_list, metric_nametwo+'.average','gauge', met_desctwo)
+
+                    self.aws_list2.append([ogmetrictwo_name, "None"])
+                    self.mapping.append('ec2.' + self.convertToSnakeCase(metric_nametwo).replace('aws.ec2.','')+' '+
+                                        'aws_ec2_' + self.convertToSnakeCase(metric_nametwo).replace('aws.ec2.',''))
+
+
 
         for w in tablethreerows[1:]:
             colsfour = w.findAll('td')
@@ -214,8 +245,11 @@ class AWSEc2Extractor:
                             else:
                                 met_unitone4 = 'count'
                         idx + idx + 1
-                    self.aws_list2.append([ogmetricfour_name, ""])
-                    self.add_to_list(self.aws_list, metric_namefour, met_unitone4, met_descone4)
+                    self.aws_list2.append([ogmetricfour_name, "None"])
+                    self.add_to_list(self.aws_list, metric_namefour, 'gauge', met_descone4)
+                    self.mapping.append('ec2.' + self.convertToSnakeCase(metric_namefour).replace('aws.ec2.','')+' '+
+                                        'aws_ec2_' + self.convertToSnakeCase(metric_namefour).replace('aws.ec2.',''))
+
         for s in tablefourrows[1:]:
             colsfive = s.findAll('td')
             if colsfive and len(colsfive) > 0:
@@ -251,15 +285,18 @@ class AWSEc2Extractor:
                         elif 'statistics' in varr:
                             met_statsone = varr
                         idx + idx + 1
-                    self.add_to_list(self.aws_list, metric_namefive, met_unitonefive, met_desconefive)
-                    self.aws_list2.append([ogmetricfive_name, ""])
+                    self.add_to_list(self.aws_list, metric_namefive, 'gauge', met_desconefive)
+                    self.aws_list2.append([ogmetricfive_name, "None"])
+                    self.mapping.append('ec2.' + self.convertToSnakeCase(metric_namefive).replace('aws.ec2.','')+' '+
+                                        'aws_ec2_' + self.convertToSnakeCase(metric_namefive).replace('aws.ec2.',''))
+
                     if met_statsone:
-                        self.add_to_list(self.aws_list, metric_namefive + "_min", met_unitonefive,
-                                         met_desconefive + "_min")
-                        self.add_to_list(self.aws_list, metric_namefive + "_max", met_unitonefive,
-                                         met_desconefive + "_max")
-                        self.add_to_list(self.aws_list, metric_namefive + "_avg", met_unitonefive,
-                                         met_desconefive + "_avg")
+                        self.add_to_list(self.aws_list, metric_namefive + ".minimum", met_unitonefive,
+                                         met_desconefive + ".minimum")
+                        self.add_to_list(self.aws_list, metric_namefive + ".maximum", met_unitonefive,
+                                         met_desconefive + ".maximum")
+                        self.add_to_list(self.aws_list, metric_namefive + ".average", met_unitonefive,
+                                         met_desconefive + ".average")
         for d in table5[1:]:
             colssix = d.findAll('td')
             if colssix and len(colssix) > 0:
@@ -286,16 +323,19 @@ class AWSEc2Extractor:
                     elif var.startwith('Statistics:'):
                         met_statsonesix = varr
                     idx + idx + 1
-                self.add_to_list(self.aws_list, metric_namesix, met_unitonesix, met_desconesix)
-                self.aws_list2.append([ogmetricsix_name, ""])
+                self.add_to_list(self.aws_list, metric_namesix, 'gauge', met_desconesix)
+                self.aws_list2.append([ogmetricsix_name, "None"])
+                self.mapping.append('ec2.' + self.convertToSnakeCase(ogmetricsix_name)+' '+
+                                    'aws_ec2_' + self.convertToSnakeCase(ogmetricsix_name))
+
                 #self.aws_list2.append([met_statsonesix])
                 if met_statsonesix:
-                    self.add_to_list(self.aws_list, metric_namesix + "_min", met_unitonesix,
-                                     met_desconefive + "_min_")
-                    self.add_to_list(self.aws_list, metric_namesix + "_max", met_unitonesix,
-                                     met_desconefive + "_max_")
-                    self.add_to_list(self.aws_list, metric_namesix + "_avg", met_unitonesix,
-                                     met_desconefive + "_avg")
+                    self.add_to_list(self.aws_list, metric_namesix + ".minimum", met_unitonesix,
+                                     met_desconefive + ".minimum")
+                    self.add_to_list(self.aws_list, metric_namesix + ".maximum", met_unitonesix,
+                                     met_desconefive + ".maximum")
+                    self.add_to_list(self.aws_list, metric_namesix + ".average", met_unitonesix,
+                                     met_desconefive + ".average")
         for t in table6rows[1:]:
             colp = t.findAll('td')
             co = colp[0]
@@ -303,7 +343,8 @@ class AWSEc2Extractor:
             metseven = self.snake_case(orig)
             self.aws_dict['keys'].append(
                 {'name': metseven, 'alias': 'dimension_' + co.text.strip()})
-
+            #self.yaml = ["- keys:  - name: ".replace+ metseven,"    alias: "+ co.text.strip(),"type: ec2"]
+        print(self.mapping)
 
     def generate_csv(self):
         os.chdir('./CSV_FOLDER')
@@ -316,7 +357,7 @@ class AWSEc2Extractor:
         os.chdir('./CSV_METRIC_NAMES')
         with open(CSV2, 'w', newline='') as f:
             wr = csv.writer(f)
-            wr.writerow(METRIC_HEADERS)
+            wr.writerow(mn)
             wr.writerows(self.aws_list2)
         os.chdir('..')
     def generate_yaml(self):
@@ -348,7 +389,12 @@ class AWSEc2Extractor:
     def convertToSnakeCase(name):
         s1 = re.sub('(.^_)([A-Z][a-z]+)', r'\1_\2', name)
         return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
-
+    def generateMapping(self):
+        os.chdir('MAPPING_FOLDER')
+        with open(MAPPING_FILE, 'w') as filehandle:
+            for listitem in self.mapping:
+                filehandle.write(str(listitem)+'\n' )
+        os.chdir('..')
 
 if __name__ == "__main__":
     extractor = AWSEc2Extractor('https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/viewing_metrics_with_cloudwatch.html')
@@ -357,3 +403,4 @@ if __name__ == "__main__":
     extractor.generate_yaml()
     extractor.generate_csv()
     extractor.generate_csv2()
+    extractor.generateMapping()

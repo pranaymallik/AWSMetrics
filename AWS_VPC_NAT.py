@@ -9,6 +9,7 @@ res = requests.get('https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gat
 CSV_FILE = 'AWS.VPC.NAT.csv'
 CSV2 = 'AWS.stats.VPC.NAT.csv'
 YAML_File = 'AWS.VPC.NAT.yaml'
+MAPPING_FILE = 'AWS.VPC.NAT.MAPPING.TEXT'
 METRIC_HEADERS =["metric_name", "metric_type", "interval", "unit_name", "per_unit_name", "description", "orientation",
                   "integration", "short_name",]
 mn = ['metric name','stats']
@@ -23,7 +24,7 @@ class AWSVPC_NATExtractor:
         self.aws_dict = {}
         self.aws_list = []
         self.aws_list2 = []
-
+        self.mapping = []
     def load_page(self):
         page = requests.get(self.url)
         if page.status_code == 200:
@@ -45,7 +46,7 @@ class AWSVPC_NATExtractor:
             cols = i.findAll('td')
             col = cols[0]
             original_metric_name = col.text.strip()
-            metric_name = 'aws.vpc_'+self.snake_case(original_metric_name)
+            metric_name = 'aws.vpc.'+self.snake_case(original_metric_name)
             cold = cols[1]
             sections = cold.findChildren('p')
             if sections and len(sections)>0:
@@ -74,13 +75,17 @@ class AWSVPC_NATExtractor:
                                 metric_units = 'guage'
 
                     if var.startswith('Statistics:'):
-                        metric_stats = var
+                        metric_stats = var.replace('Statistics: The most useful statistic is ','').replace('.','')
                 # print(metric_name)
                 self.aws_list2.append([original_metric_name,metric_stats])
-                self.add_to_list(self.aws_list,metric_name+'_min',metric_desc,metric_units)
-                self.add_to_list(self.aws_list,metric_name+'_max', metric_desc, metric_units)
-                self.add_to_list(self.aws_list,metric_name+'_avg', metric_desc, metric_units)
+                self.add_to_list(self.aws_list,metric_name+'.minimum',metric_desc,metric_units)
+                self.add_to_list(self.aws_list,metric_name+'.maximum', metric_desc, metric_units)
+                self.add_to_list(self.aws_list,metric_name+'.average', metric_desc, metric_units)
                 idx = idx + 1
+                self.mapping.append('vpc.' + metric_name.replace('aws.vpc.', '')+' '+
+                                     'aws_vpc_' + metric_name.replace('aws.vpc.', ''))
+
+
 
         for u in main_content.findAll('table')[1].findAll('tr')[1:]:
             coly = u.findAll('td')
@@ -93,7 +98,7 @@ class AWSVPC_NATExtractor:
             metric_desctwo = colrw.text.strip()
             self.aws_dict['keys'].append(
                 {'name': metric_nametwo , 'alias': 'dimension_' + original_metric_nametwo})
-
+        #print(self.mapping)
     @staticmethod
     def snake_case(input_string):
 
@@ -128,6 +133,13 @@ class AWSVPC_NATExtractor:
             yaml.dump([self.aws_dict], outfile, default_flow_style=False)
         os.chdir('..')
 
+    def generateMapping(self):
+        os.chdir('MAPPING_FOLDER')
+
+        with open(MAPPING_FILE, 'w') as filehandle:
+            for listitem in self.mapping:
+                filehandle.write(str(listitem)+'\n')
+        os.chdir('..')
 
     @staticmethod
     def add_to_list(aws_list, metric_name, description,metric_units):
@@ -140,3 +152,4 @@ if __name__ == "__main__":
     extractor.generate_yaml()
     extractor.generate_csv()
     extractor.generate_csv2()
+    extractor.generateMapping()

@@ -7,6 +7,8 @@ import os
 
 res = requests.get('https://docs.aws.amazon.com/vpn/latest/s2svpn/monitoring-cloudwatch-vpn.html')
 CSV_FILE = 'AWS.VPC.VPN.csv'
+MAPPING_FILE = 'AWS.VPC.VPN.MAPPING.TEXT'
+
 CSV2 = 'AWS.stats.VPC.VPN.csv'
 YAML_File = 'AWS.VPC.VPN.yaml'
 METRIC_HEADERS= ["metric_name", "metric_type", "interval", "unit_name", "per_unit_name", "description", "orientation","integration", "short_name", ]
@@ -23,6 +25,7 @@ class AWSVPC_VPNExtractor:
         self.aws_dict = {}
         self.aws_list = []
         self.aws_list2 = []
+        self.mapping = []
 
     def load_page(self):
         page = requests.get(self.url)
@@ -45,7 +48,7 @@ class AWSVPC_VPNExtractor:
             cols = i.findAll('td')
             col = cols[0]
             original_metric_name = col.text.strip()
-            metric_name = 'aws.vpc_'+self.snake_case(original_metric_name)
+            metric_name = 'aws.vpc.'+self.snake_case(original_metric_name)
             cold = cols[1].text.strip()
             metric_desc = cold.replace('\n','').replace('\t','')
             # print(metric_name)
@@ -63,12 +66,15 @@ class AWSVPC_VPNExtractor:
                 elif sectstr.startswith(UNITS_):
                     metric_units = sectstr.replace('Units: ','')
                     if metric_units != 'count':
-                        metric_units = 'guage'
+                        metric_units = 'gauge'
 
 
                 idx = idx+1
-            self.aws_list2.append([original_metric_name])
+            self.aws_list2.append([original_metric_name,'None'])
             self.aws_list.append([metric_name,metric_units,"","","",metric_desc,"","vpc",""])
+            self.mapping.append('vpc.' + metric_name.replace('aws.vpc.', '')+' '+
+                                 'aws_vpc_' + metric_name.replace('aws.vpc.', ''))
+
         for g in tabletwo.findAll('tr')[1:]:
             colt = g.findAll('td')[0]
             colt = colt.text.strip()
@@ -76,7 +82,7 @@ class AWSVPC_VPNExtractor:
             metricnm = self.snake_case(colt)
             self.aws_dict['keys'].append(
                 {'name': metricnm, 'alias': 'dimension_' + metricyamlname})
-
+        print(self.mapping)
     @staticmethod
     def snake_case(input_string):
 
@@ -95,7 +101,12 @@ class AWSVPC_VPNExtractor:
         os.chdir('..')
 
 
-
+    def generateMapping(self):
+        os.chdir('MAPPING_FOLDER')
+        with open(MAPPING_FILE, 'w') as filehandle:
+            for listitem in self.mapping:
+                filehandle.write(str(listitem)+'\n')
+        os.chdir('..')
     def generate_csv2(self):
         os.chdir('./CSV_METRIC_NAMES')
 
@@ -124,3 +135,4 @@ if __name__ == "__main__":
     extractor.generate_yaml()
     extractor.generate_csv()
     extractor.generate_csv2()
+    extractor.generateMapping()

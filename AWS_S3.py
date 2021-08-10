@@ -8,7 +8,7 @@ import os
 UNITS_ = 'Units:'
 VALID_STATISTICS_ = 'Valid statistics:'
 LATENCY_VALUES = ['minimum', 'maximum', 'p50', 'p90', 'p95', 'p99', 'p99.99']
-
+MAPPING_FILE = 'AWS.S3.MAPPING.TEXT'
 METRIC_HEADERS = ["metric_name", "metric stats"]
 YAML_FILE = "AWS.S3.yaml"
 CSV_FILE = "AWS.S3.csv"
@@ -23,6 +23,7 @@ class AWSS3Extractor:
         self.aws_dict = {}
         self.aws_list = []
         self.aws_list2 = []
+        self.mapping = []
 
     def load_page(self):
         page = requests.get(self.url)
@@ -47,7 +48,7 @@ class AWSS3Extractor:
 
                 metric_name_snake_case = self.snake_case(original_metric_name)
                 metric_name = 'aws.s3.' + metric_name_snake_case
-
+                #print(metric_name)
 
             if cols and len(cols) > 1:
                 col = cols[1]
@@ -68,23 +69,33 @@ class AWSS3Extractor:
                                 metric_stats = section_string.replace(VALID_STATISTICS_, '').strip()
                                 metric_stats = " ".join(metric_stats.split())
                                 metric_stats = metric_stats.replace('\n', '')
+                                metric_stats = re.sub(r"\([^()]*\)", "", metric_stats).replace(' ', '')
+
+
+
                             elif section_string.startswith(UNITS_):
                                 metric_units = section_string.replace(UNITS_, '').strip()
-
+                            if metric_stats == '':
+                                metric_stats = 'None'
                         idx = idx + 1
 
                         if metric_desc and metric_stats and metric_units:
                             metric_units = metric_units.lower()
                             if metric_units != 'count':
                                 metric_units = 'gauge'
-                            self.add_to_list(self.aws_list, metric_name, metric_units, metric_stats, metric_desc, )
+                            self.add_to_list(self.aws_list, metric_name, metric_units, metric_stats, metric_desc)
+                            if metric_stats or metric_name.endswith('latency'):
 
-                            if metric_name.endswith('latency'):
-                                for suffix in LATENCY_VALUES:
-                                    self.add_to_list(self.aws_list, metric_name + '.' + suffix, metric_units,
+
+                                #if metric_name.endswith('latency'):
+                                    for suffix in LATENCY_VALUES:
+                                        self.add_to_list(self.aws_list, metric_name + '.' + suffix, metric_units,
                                                      metric_stats,
                                                      self.update_description(metric_desc, suffix))
                     self.add_to_list2(self.aws_list2, original_metric_name, metric_stats)
+                    self.mapping.append('s3.' + metric_name.replace('aws.s3.','')+' '+
+                                             'aws_s3_' + metric_name.replace('aws.s3.',''))
+
         matchone = soup.findAll('table')
         rowsone = matchone[1].findAll('tr')
         rowsfour = matchone[4].findAll('tr')
@@ -93,13 +104,14 @@ class AWSS3Extractor:
             coly = colone[0]
             ogmet = coly.text.strip()
             met_name = 'aws.s3.' + self.snake_case(ogmet)
-
+            #print(met_name)
             colonetwo = colone[1]
             sec = colonetwo.findChildren('p')
 
             if sec and len(sec) > 0:
                 met_desc = ''
                 met_units = ''
+                met_stats = ''
                 idx = 0
                 if sec:
                     for v in sec:
@@ -110,6 +122,13 @@ class AWSS3Extractor:
                         # print(var2)
                         if var2 and idx == 0:
                             met_desc = var2
+                        elif var2.startswith('Valid statistics: '):
+                            met_stats = var2.replace('Valid statistics: ','')
+                            if '(' in met_stats:
+                                met_stats = re.sub(r"\([^()]*\)", "", met_stats).replace(' ', '')
+
+
+                            #print(met_stats)
                         elif var2.startswith(UNITS_):
                             met_units = var2
                             met_units = met_units.replace(UNITS_, '').strip()
@@ -118,15 +137,25 @@ class AWSS3Extractor:
                                 met_units = 'gauge'
                             else:
                                 met_units = 'count'
-                        idx = idx + 1
 
-                    self.add_to_list(self.aws_list, met_name, met_units, "", met_desc, )
+                        idx = idx + 1
+                    self.add_to_list(self.aws_list, metric_name, met_units, met_stats, met_desc, )
+                    self.add_to_list(self.aws_list, met_name, met_units, met_stats, met_desc, )
+                    self.add_to_list(self.aws_list, met_name, met_units, met_stats, met_desc, )
+                    self.add_to_list(self.aws_list, met_name, met_units, met_stats, met_desc, )
+                    self.add_to_list2(self.aws_list2, ogmet, met_stats)
+                    self.mapping.append('s3.' + met_name.replace('aws.s3.','')+' '
+                                             'aws_s3_' +met_name.replace('aws.s3.',''))
+
+
+        print(self.mapping)
         for t in rowsfour[1:]:
             colo = t.findAll('td')[0]
             yamlmetname = self.snake_case(colo.text.strip())
             ogmetyaml =  colo.text.strip()
             self.aws_dict['keys'].append(
                 {'name': yamlmetname, 'alias': 'dimension_' + ogmetyaml})
+        print(self.mapping)
 
     def generate_csv(self):
         os.chdir('CSV_FOLDER')
@@ -176,6 +205,12 @@ class AWSS3Extractor:
             return input_string
 
 
+    def generateMapping(self):
+        os.chdir('MAPPING_FOLDER')
+        with open(MAPPING_FILE, 'w') as filehandle:
+            for listitem in self.mapping:
+                filehandle.write('\n' +str(listitem))
+        os.chdir('..')
 if __name__ == "__main__":
     extractor = AWSS3Extractor('https://docs.aws.amazon.com/AmazonS3/latest/userguide/metrics-dimensions.html')
     extractor.load_page()
@@ -183,3 +218,4 @@ if __name__ == "__main__":
     extractor.generate_yaml()
     extractor.generate_csv()
     extractor.generate_csv2()
+    extractor.generateMapping()

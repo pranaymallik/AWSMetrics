@@ -7,11 +7,13 @@ import os
 
 UNITS_ = 'Units:'
 VALID_STATISTICS_ = 'Valid statistics:'
+MAPPING_FILE = 'AWS.EBS.MAPPING.TEXT'
+
 LATENCY_VALUES = ['minimum', 'maximum', 'p50', 'p90', 'p95', 'p99', 'p99.99']
 CODE_MAP = {
 
-    'Read Throughput (IOPS)': 'read_throughput (iops) ',
-    'Write Throughput (IOPS)': 'write_throughput (iops) '
+    'Read Throughput (IOPS)': 'read_throughput(iops)',
+    'Write Throughput (IOPS)': 'write_throughput(iops)'
 }
 
 METRIC_HEADERS = ["metric_name", "metric stats" ]
@@ -30,6 +32,7 @@ class AWSEBSExtractor:
         self.aws_dict = {}
         self.aws_list = []
         self.aws_list2 = []
+        self.mapping = []
 
 
     def load_page(self):
@@ -70,8 +73,8 @@ class AWSEBSExtractor:
         for tempy in thirdp:
             th = tempy.text.strip()
             thirdname = self.snake_case(th)
-        self.aws_dict['keys'].append(
-            {'name': firstname, 'alias': 'dimension_' + first})
+        self.aws_dict['keys'].append({'alias': 'dimension_' + first,
+            'name': firstname,} )
         self.aws_dict['keys'].append(
             {'name': secondname, 'alias': 'dimension_' + seco})
         self.aws_dict['keys'].append(
@@ -86,8 +89,8 @@ class AWSEBSExtractor:
             cols = table.findAll('td')
             col = cols[0]
             original_metric_name = col.text.strip()
-            self.aws_list2.append([original_metric_name])
-            metric_name = 'aws.Ebs.' + self.snake_case(col.text.strip())
+            self.aws_list2.append([original_metric_name,'None'])
+            metric_name = "aws.ebs." + self.snake_case(col.text.strip())
             if original_metric_name in CODE_MAP.keys():
                 metric_name = CODE_MAP[original_metric_name]
             # if metric_name ==
@@ -109,13 +112,20 @@ class AWSEBSExtractor:
                         # print(metric_units)
                         if 'Count' not in metric_units:
                             metric_units = 'guage'
+                        elif metric_units == '':
+                            metric_units = 'gauge'
                         else:
                             metric_units = 'count'
+
+
                     idx = idx + 1
+                self.mapping.append('ebs.' + self.snake_case(original_metric_name)+' '+
+                                     'aws_ebs_' + self.snake_case(original_metric_name))
+
                 self.add_to_list(self.aws_list, metric_name, metric_units, metric_desc)
-                self.add_to_list(self.aws_list, metric_name + "_min_", metric_units, metric_desc + "_min_")
-                self.add_to_list(self.aws_list, metric_name + "_max_", metric_units, metric_desc + "_max_")
-                self.add_to_list(self.aws_list, metric_name + "_avg_", metric_units, metric_desc + "_avg_")
+                self.add_to_list(self.aws_list, metric_name + ".minimum", metric_units, metric_desc)
+                self.add_to_list(self.aws_list, metric_name + ".maximum", metric_units, metric_desc)
+                self.add_to_list(self.aws_list, metric_name + ".average", metric_units, metric_desc)
 
         rowone = main_content[1].findAll('tr')
 
@@ -125,11 +135,12 @@ class AWSEBSExtractor:
             colone = x.findAll('td')
             cole = colone[0]
             ogmetricname = cole.text.strip()
-            self.aws_list2.append([ogmetricname])
-            metricnameone = self.snake_case(cole.text.strip())
+            self.aws_list2.append([ogmetricname,'None'])
+            metricnameone = 'aws.ebs.'+self.snake_case(cole.text.strip())
 
             # print(metricnameone)
             coles = colone[1]
+
             sectionone = coles.findChildren('p')
             if sectionone:
                 for r in sectionone:
@@ -138,10 +149,15 @@ class AWSEBSExtractor:
                     var10 = var10.replace('\n', '')
                     var16 = ' '.join(var10.split())
                     metricdescone = var16
-                self.add_to_list(self.aws_list, metricnameone, "", metricdescone)
-                self.add_to_list(self.aws_list, metricnameone + "_min_", "", metricdescone + "_min_")
-                self.add_to_list(self.aws_list, metricnameone + "_max_", "", metricdescone + "_max_")
-                self.add_to_list(self.aws_list, metricnameone + "_avg_", "", metricdescone + "_avg_")
+
+
+                self.mapping.append('ebs.' + self.snake_case(ogmetricname)+' '+
+                                        'aws_ebs_' + self.snake_case(ogmetricname))
+
+                self.add_to_list(self.aws_list, metricnameone, "gauge", metricdescone)
+                self.add_to_list(self.aws_list, metricnameone + ".minimum", "gauge", metricdescone )
+                self.add_to_list(self.aws_list, metricnameone + ".maximum", "gauge", metricdescone )
+                self.add_to_list(self.aws_list, metricnameone + ".average", "gauge", metricdescone )
         rowtwo = main_content[2].findAll('tr')
         for j in rowtwo[1:]:
             metricnameoneone = ''
@@ -149,12 +165,13 @@ class AWSEBSExtractor:
             coloneone = j.findAll('td')
             coless = coloneone[0]
             ogonemetricname = coless.text.strip()
-            self.aws_list2.append([ogonemetricname])
-            metricnameoneone = 'aws.Ebs.' + self.snake_case(coless.text.strip())
+            self.aws_list2.append([ogonemetricname,'None'])
+            metricnameoneone = "aws.ebs." + self.snake_case(coless.text.strip())
             if ogonemetricname in CODE_MAP.keys():
-                metricnameoneone = 'aws.Ebs.'+CODE_MAP[ogonemetricname]
-
+                metricnameoneone = "aws.ebs."+CODE_MAP[ogonemetricname]
+            metricnameoneone = re.sub(r"\([^()]*\)", "",metricnameoneone).replace(' ','')
             # print(metricnameone)
+            metricformapping = metricnameoneone.replace('aws.ebs.','')
             colesthree = coloneone[1]
             sectiononetwo = colesthree.findChildren('p')
             descriptionsone = colesthree.findAll(text=True)
@@ -162,10 +179,14 @@ class AWSEBSExtractor:
             var5 = var5.replace('\n', '')
             var6 = ' '.join(var5.split())
             metricdesconeone = var6
-            self.add_to_list(self.aws_list, metricnameoneone, "", metricdesconeone)
-            self.add_to_list(self.aws_list, metricnameoneone + "_min_", "", metricdesconeone + "_min_")
-            self.add_to_list(self.aws_list, metricnameoneone + "_max_", "", metricdesconeone + "_max_")
-            self.add_to_list(self.aws_list, metricnameoneone + "_avg_", "", metricdesconeone + "_avg_")
+            self.mapping.append('ebs.' + metricformapping+' '+
+                                 'aws_ebs_' + metricformapping)
+
+            self.add_to_list(self.aws_list, metricnameoneone, "gauge", metricdesconeone)
+            self.add_to_list(self.aws_list, metricnameoneone + ".minimum", "gauge", metricdesconeone)
+            self.add_to_list(self.aws_list, metricnameoneone + ".maximum", "gauge", metricdesconeone)
+            self.add_to_list(self.aws_list, metricnameoneone + ".average", "gauge", metricdesconeone)
+        print(self.mapping)
 
 
     def generate_csv(self):
@@ -206,6 +227,12 @@ class AWSEBSExtractor:
             return re.sub(r'(?<!^)(?=[A-Z])', '_', input_string).lower()
         else:
             return input_string
+    def generateMapping(self):
+        os.chdir('MAPPING_FOLDER')
+        with open(MAPPING_FILE, 'w') as filehandle:
+            for listitem in self.mapping:
+                filehandle.write(str(listitem)+'\n')
+        os.chdir('..')
 
 
 if __name__ == "__main__":
@@ -215,3 +242,4 @@ if __name__ == "__main__":
     extractor.generate_yaml()
     extractor.generate_csv()
     extractor.generate_csv2()
+    extractor.generateMapping()

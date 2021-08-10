@@ -4,17 +4,19 @@ import re
 import yaml
 import csv
 import os
+import numpy as np
 
 UNITS_ = 'Units:'
 VALID_STATISTICS_ = 'Valid statistics:'
 LATENCY_VALUES = ['minimum', 'maximum', 'p50', 'p90', 'p95', 'p99', 'p99.99']
-
+MAPPING_FILE = 'AWS.ELB.MAPPING.TEXT'
 METRIC_HEADERS = ["metric_name", "metric Stats"]
 YAML_FILE = "AWS.ELB.yaml"
 CSV_FILE = "AWS.ELB.csv"
 CSV2 = "AWS.stats.ELB.csv"
 mn =  ["metric_name", "metric_type", "interval", "unit_name", "per_unit_name", "description", "orientation",
                   "integration", "short_name", ]
+httpcode2 = 'aws.elb.httpcode_backend_2xx'
 CODE_MAP = {
     'DesyncMitigationMode_NonCompliant_Request_Count': 'desync_mitigation_mode_non_compliant_request_count',
     'aws.elbdesync_mitigation_mode__non_compliant__request__count': 'aws.elbdesync_mitigation_mode_non_compliant_request_count',
@@ -36,6 +38,7 @@ class ELBExtractor:
         self.aws_dict = {}
         self.aws_list = []
         self.aws_list2 = []
+        self.mapping = []
 
     def load_page(self):
         page = requests.get(self.url)
@@ -52,6 +55,8 @@ class ELBExtractor:
         metric_name = ''
         self.aws_dict = {'type': 'elb', 'keys': []}
         self.aws_list = []
+        self.mapping = []
+        htppcode2 = 'http_code_backend_2xx'
         for row in rowsone[1:]:
             metric_desc = ''
             metric_statistics = ''
@@ -65,10 +70,20 @@ class ELBExtractor:
             originalmetricname = col.text.strip().replace('\n', '')
             metric_name = 'aws.elb.' + self.snake_case(originalmetricname)
             originalmetricname = originalmetricname.replace('\t', '')
-            self.aws_list2.append([originalmetricname])
+            if originalmetricname =='HTTPCode_Backend_2XX,                                                   HTTPCode_Backend_3XX,                                                   HTTPCode_Backend_4XX,                                                   HTTPCode_Backend_5XX':
+                self.aws_list2.append(['HTTPCode_Backend_2XX',"None"])
+                self.aws_list2.append(['HTTPCode_Backend_3XX','None'])
+                self.aws_list2.append(['HTTPCode_Backend_4XX','None'])
+                self.aws_list2.append(['HTTPCode_Backend_5XX','None'])
+
+
+
+            else:
+                self.aws_list2.append([originalmetricname,'None'])
+
 
             if allChildren and len(allChildren)> 1 :
-                #  print(allChildren[2])
+                #print(allChildren[2])
                 var11 = ' '.join(allChildren)
                 var11 = var11.replace('\n', '')
                 var22 = ' '.join(var11.split())
@@ -98,10 +113,14 @@ class ELBExtractor:
                             var2 = ' '.join(var1.split())
                             if var2 and idx == 0:
                                 metric_desc = var2
+
+                    self.mapping.append('elb.' + op.replace('aws.elb.','')+' '
+                                             'aws_elb_' + op.replace('aws.elb.','' ))
                     self.add_to_list(self.aws_list, op, metric_desc, )
-                    self.add_to_list(self.aws_list, op + "_min", metric_desc + "_min")
-                    self.add_to_list(self.aws_list, op + "_max", metric_desc + "_max")
-                    self.add_to_list(self.aws_list, op + "_avg", metric_desc + "_avg")
+                    self.add_to_list(self.aws_list, op + ".minimum", metric_desc + ".minimum")
+                    self.add_to_list(self.aws_list, op + ".maximum", metric_desc + ".maximum")
+                    self.add_to_list(self.aws_list, op + ".average", metric_desc + ".average")
+
 
 
             else:
@@ -127,10 +146,19 @@ class ELBExtractor:
                         elif var2.startswith('Example'):
                             metric_example = var2
                         idx = idx + 1
+
+
+                    self.mapping.append('elb.' + metric_name.replace('aws.elb.','')+' '+
+                                             'aws_elb_' + metric_name.replace('aws.elb.',''))
+
                     self.add_to_list(self.aws_list, metric_name, metric_desc, )
-                    self.add_to_list(self.aws_list, metric_name + "_min", metric_desc + "_min")
-                    self.add_to_list(self.aws_list, metric_name + "_max", metric_desc + "_max")
-                    self.add_to_list(self.aws_list, metric_name + "_avg", metric_desc + "_avg")
+                    self.add_to_list(self.aws_list, metric_name + ".minimum", metric_desc + ".minimum")
+                    self.add_to_list(self.aws_list, metric_name + ".maximum", metric_desc + ".maximum")
+                    self.add_to_list(self.aws_list, metric_name + ".average", metric_desc + ".average")
+
+                    #self.mapping.append(['elb.' + self.convertToSnakeCase(ogmetricfive_name),
+                                        #'aws_elb_' + self.convertToSnakeCase(ogmetricfive_name)])
+
 
 
 
@@ -141,14 +169,21 @@ class ELBExtractor:
             col = cols[0]
             colone = cols[1]
             coltext = col.text.strip()
-            self.aws_list2.append([coltext])
+            self.aws_list2.append([coltext,"None"])
             met_name = 'aws.elb.' + self.snake_case(col.text.strip())
+            met_un= 'guage'
             if coltext in CODE_MAP.keys():
                 met_name = CODE_MAP[coltext]
 
             met_desc = (colone.text.strip())
             # print(met_desc)
+            self.mapping.append('elb.' + met_name.replace('aws.elb.', '')+' '+
+                                 'aws_elb_' + met_name.replace('aws.elb.', ''))
+
             self.add_to_list(self.aws_list, met_name, met_desc)
+            #self.mapping.append(['elb.' + self.convertToSnakeCase(ogmetricfive_name),
+                                 #'aws_elb_' + self.convertToSnakeCase(ogmetricfive_name)])
+
         mathcthree = soup.find('table', id="w282aac21b7c15b5")
         matchthreerows = mathcthree.findAll('tr')
         for l in matchthreerows[1:]:
@@ -163,6 +198,14 @@ class ELBExtractor:
             # print(met_name)
             met_descone = (colone.text.strip())
             # print(met_desc)
+        #print(self.mapping)
+        #for i in self.mapping:
+        self.add_to_list(self.aws_list, httpcode2, metric_desc, )
+        self.add_to_list(self.aws_list, httpcode2 + ".minimum", metric_desc + ".minimum")
+        self.add_to_list(self.aws_list, htppcode2 + ".maximum", metric_desc + ".maximum")
+        self.add_to_list(self.aws_list, httpcode2 + ".average", metric_desc + ".average")
+        self.mapping.append('elb.' + httpcode2.replace('aws.elb.', '') + ' '
+                                                                         'aws_elb_' + httpcode2.replace('aws.elb.', ''))
 
 
 
@@ -170,7 +213,7 @@ class ELBExtractor:
         os.chdir('CSV_FOLDER')
         with open(CSV_FILE, 'w', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow(METRIC_HEADERS)
+            writer.writerow(mn)
             writer.writerows(self.aws_list)
         os.chdir('..')
 
@@ -178,7 +221,7 @@ class ELBExtractor:
         os.chdir('CSV_METRIC_NAMES')
         with open(CSV2, 'w', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow(mn)
+            writer.writerow(METRIC_HEADERS)
             writer.writerows(self.aws_list2)
         os.chdir('..')
 
@@ -198,7 +241,7 @@ class ELBExtractor:
     @staticmethod
     def add_to_list(aws_list, metric_name, description):
         #print(metric_name, "||", description, )
-        aws_list.append([metric_name, "", "", "", "", description, "", "elb", ""])
+        aws_list.append([metric_name, "guage", "", "", "", description, "", "elb", ""])
 
     @staticmethod
     def snake_case(input_string):
@@ -206,6 +249,13 @@ class ELBExtractor:
             return re.sub(r'(?<!^)(?=[A-Z])', '_', input_string).lower()
         else:
             return input_string
+
+    def generateMapping(self):
+        os.chdir('MAPPING_FOLDER')
+        with open(MAPPING_FILE, 'w') as filehandle:
+            for listitem in self.mapping:
+                filehandle.write(str(listitem)+'\n' )
+        os.chdir('..')
 
 
 if __name__ == "__main__":
@@ -216,3 +266,4 @@ if __name__ == "__main__":
     extractor.generate_yaml()
     extractor.generate_csv()
     extractor.generate_csv2()
+    extractor.generateMapping()

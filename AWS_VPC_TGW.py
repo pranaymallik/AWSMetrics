@@ -14,6 +14,7 @@ METRIC_HEADERS =  ["metric_name", "metric_type", "interval", "unit_name", "per_u
 mn = ['metric name', 'stats']
 lineadder = ['Minimum', 'Maximum', 'Average']
 Statistics = 'Statistics: '
+MAPPING_FILE = 'AWS.VPC.TGW.MAPPING.TEXT'
 
 
 class AWSVPC_TGWExtractor:
@@ -23,7 +24,7 @@ class AWSVPC_TGWExtractor:
         self.aws_dict = {}
         self.aws_list = []
         self.aws_list2 = []
-
+        self.mapping = []
     def load_page(self):
         page = requests.get(self.url)
         if page.status_code == 200:
@@ -50,7 +51,7 @@ class AWSVPC_TGWExtractor:
             col = cols[0]
             allChildren = col.findAll(text=True)
             originalmetricname = col.text.strip().replace('\n', '')
-            metric_name = 'aws.vpc_' + self.snake_case(originalmetricname)
+            metric_name = 'aws.vpc.' + self.snake_case(originalmetricname)
             #print(metric_name)
             cold = cols[1]
             results = str(cold.find('code', {'class': "code"}))
@@ -59,7 +60,9 @@ class AWSVPC_TGWExtractor:
                 metric_desc = cold.text.strip().replace('\n','').replace(' a                                                   blackhole route.',' blackhole route')
                 #print(metric_name+";",metric_desc)
             self.add_to_list(self.aws_list,metric_name,metric_desc)
-            self.add_to_list2(self.aws_list2,originalmetricname,"")
+            self.add_to_list2(self.aws_list2,originalmetricname,"None")
+            self.mapping.append('vpc.' + metric_name.replace('aws.vpc.', '')+' '+
+                                 'aws_vpc_' + metric_name.replace('aws.vpc.', ''))
 
         for j in rowstwo[1:]:
             cole = j.findAll('td')
@@ -76,13 +79,14 @@ class AWSVPC_TGWExtractor:
             metric_descone = var2
             self.add_to_list(self.aws_list,metric_nameone,metric_descone)
             self.add_to_list2(self.aws_list2,ogmet,"")
-        for x in rowsthree[1:]:
-            c = x.findAll('td')
-            ch = c[0].text.strip()
-            met_yaml =self.snake_case(ch)
 
-            self.aws_dict['keys'].append(
-                {'name': met_yaml, 'alias': 'dimension_' + ch})
+        self.mapping.append('vpc.' + metric_nameone.replace('aws.vpc.', '') + ' ' +
+                            'aws_vpc_' + metric_nameone.replace('aws.vpc.', ''))
+
+
+
+
+
 
     def generate_csv(self):
         os.chdir('CSV_FOLDER')
@@ -124,7 +128,7 @@ class AWSVPC_TGWExtractor:
     @staticmethod
     def add_to_list2(aws_list, metric_name, description):
         #print(metric_name, "||", description, )
-        aws_list.append([metric_name,description])
+        aws_list.append([metric_name,"None"])
 
 
     @staticmethod
@@ -134,6 +138,12 @@ class AWSVPC_TGWExtractor:
         else:
             return input_string
 
+    def generateMapping(self):
+        os.chdir('MAPPING_FOLDER')
+        with open(MAPPING_FILE, 'w') as filehandle:
+            for listitem in self.mapping:
+                filehandle.write(str(listitem)+'\n' )
+        os.chdir('..')
 
 if __name__ == "__main__":
     extractor = AWSVPC_TGWExtractor('https://docs.aws.amazon.com/vpc/latest/tgw/transit-gateway-cloudwatch-metrics.html')
@@ -142,3 +152,4 @@ if __name__ == "__main__":
     extractor.generate_yaml()
     extractor.generate_csv()
     extractor.generate_csv2()
+    extractor.generateMapping()
