@@ -16,6 +16,7 @@ CODE_MAP = {
     'Write Throughput (IOPS)': 'write_throughput(iops)'
 }
 
+
 METRIC_HEADERS = ["metric_name", "metric stats" ]
 YAML_FILE = "AWS.EBS.yaml"
 CSV_FILE = "AWS.EBS.csv"
@@ -55,6 +56,10 @@ class AWSEBSExtractor:
     # def get_metric_description(section):
 
     def process_content(self):
+        SUM_ = ''
+        MIN_ = ''
+        MAX_ = ''
+        AVG_ = ''
         soup = BeautifulSoup(self.content, 'html.parser')
         main_content = soup.findAll('table')
         rows = main_content[0].findAll('tr')
@@ -83,8 +88,9 @@ class AWSEBSExtractor:
 
 
         metric_name = ''
-        metric_desc = ''
+        metricdesc = ''
         metric_units = ''
+        me_t = ''
         for table in rows[1:]:
             cols = table.findAll('td')
             col = cols[0]
@@ -105,7 +111,16 @@ class AWSEBSExtractor:
                     var2 = ' '.join(var1.split())
                     # print(var2)
                     if idx == 0 and var2:
-                        metric_desc = var2
+                        metricdesc = var2
+                        if 'Sum' in metricdesc:
+                            SUM_ = 'Sum'
+                        if 'Minimum' in metricdesc:
+                            MIN_ = 'Minimum'
+                        if 'Maximum' in metricdesc:
+                            MAX_ = 'Maximum'
+                        if 'Average' in metricdesc:
+                            AVG_ = 'Average'
+
                         # print(metric_desc)
                     elif var2.startswith('Units'):
                         metric_units = var2.replace('Units: ', '')
@@ -116,17 +131,31 @@ class AWSEBSExtractor:
                             metric_units = 'gauge'
                         else:
                             metric_units = 'count'
-
+                    elif idx==3 or idx==3 and var2:
+                        me_t = var2
+                        if 'Sum' in me_t:
+                            SUM_ = 'Sum'
+                        if 'Minimum' in me_t:
+                            MIN_ = 'Minimum'
+                        if 'Maximum' in me_t:
+                            MAX_ = 'Maximum'
+                        if 'Average' in me_t:
+                            AVG_ = 'Average'
 
                     idx = idx + 1
                 self.mapping.append('ebs.' + self.snake_case(metric_name).replace('aws.ebs.','')+' '+
                                      'aws_ebs_' + self.snake_case(metric_name).replace('aws.ebs.',''))
 
-                self.add_to_list(self.aws_list, metric_name, metric_units, metric_desc)
-                self.add_to_list(self.aws_list, metric_name + ".minimum", metric_units, metric_desc)
-                self.add_to_list(self.aws_list, metric_name + ".maximum", metric_units, metric_desc)
-                self.add_to_list(self.aws_list, metric_name + ".average", metric_units, metric_desc)
 
+                self.add_to_list(self.aws_list, metric_name, metric_units, metricdesc)
+                if AVG_:
+                    self.add_to_list(self.aws_list, metric_name + ".average", "gauge", metricdesc)
+                if MIN_:
+                    self.add_to_list(self.aws_list, metric_name + ".minimum", "gauge", metricdesc)
+                if MAX_:
+                    self.add_to_list(self.aws_list, metric_name + ".maximum", "gauge", metricdesc)
+                if SUM_:
+                    self.add_to_list(self.aws_list, metric_name + ".sum", "gauge", metricdesc)
         rowone = main_content[1].findAll('tr')
 
         for x in rowone[1:]:
@@ -149,15 +178,25 @@ class AWSEBSExtractor:
                     var10 = var10.replace('\n', '')
                     var16 = ' '.join(var10.split())
                     metricdescone = var16
+                self.add_to_list(self.aws_list, metricnameone, "gauge", metricdescone)
+                if 'Average' in metricdescone:
+                    self.add_to_list(self.aws_list, metricnameone + ".average", "gauge", metricdescone)
+                if 'Minimum' in metricdescone:
+                    self.add_to_list(self.aws_list, metricnameone + ".minimum", "gauge", metricdescone)
+                if 'Maximum' in metricdescone:
+                    self.add_to_list(self.aws_list, metricnameone + ".maximum", "gauge", metricdescone)
+                if 'Sum' in metricdescone:
+                    self.add_to_list(self.aws_list, metricnameone + ".sum", "gauge", metricdescone)
+
+
 
 
                 self.mapping.append('ebs.' + self.snake_case(metricnameone).replace('aws.ebs.','')+
                                         'aws_ebs_' + self.snake_case(metricnameone).replace('aws.ebs.',''))
 
-                self.add_to_list(self.aws_list, metricnameone, "gauge", metricdescone)
-                self.add_to_list(self.aws_list, metricnameone + ".minimum", "gauge", metricdescone )
-                self.add_to_list(self.aws_list, metricnameone + ".maximum", "gauge", metricdescone )
-                self.add_to_list(self.aws_list, metricnameone + ".average", "gauge", metricdescone )
+
+
+
         rowtwo = main_content[2].findAll('tr')
         for j in rowtwo[1:]:
             metricnameoneone = ''
@@ -179,13 +218,18 @@ class AWSEBSExtractor:
             var5 = var5.replace('\n', '')
             var6 = ' '.join(var5.split())
             metricdesconeone = var6
+
+
+
+
             self.mapping.append('ebs.' + metricformapping+' '+
                                  'aws_ebs_' + metricformapping)
 
             self.add_to_list(self.aws_list, metricnameoneone, "gauge", metricdesconeone)
-            self.add_to_list(self.aws_list, metricnameoneone + ".minimum", "gauge", metricdesconeone)
-            self.add_to_list(self.aws_list, metricnameoneone + ".maximum", "gauge", metricdesconeone)
-            self.add_to_list(self.aws_list, metricnameoneone + ".average", "gauge", metricdesconeone)
+            if 'Sum' in metricdesconeone:
+                self.add_to_list(self.aws_list, metricnameoneone + ".sum", "gauge", metricdesconeone)
+            if 'Avg' in metricdesconeone:
+                self.add_to_list(self.aws_list, metricnameoneone + ".average", "gauge", metricdesconeone)
         print(self.mapping)
 
 

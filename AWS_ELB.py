@@ -49,6 +49,10 @@ class ELBExtractor:
         return self.content
 
     def process_content(self):
+        SUM_ = ''
+        MIN_ = ''
+        MAX_ = ''
+        AVG_ = ''
         soup = BeautifulSoup(self.content, 'html.parser')
         tableone = soup.find('table', id="w282aac21b7c13b5")
         rowsone = tableone.findAll('tr')
@@ -62,6 +66,7 @@ class ELBExtractor:
             metric_statistics = ''
             metric_reporting_criteria = ''
             metric_example = ''
+            metric_ststone = ''
 
             cols = row.findAll('td')
             col = cols[0]
@@ -114,14 +119,42 @@ class ELBExtractor:
                             if var2 and idx == 0:
                                 metric_desc = var2
 
+                                if 'Sum' in metric_desc:
+                                    SUM_ = 'Sum'
+                                if 'Minimum' in metric_desc:
+                                    MIN_ = 'Minimum'
+                                if 'Maximum' in metric_desc:
+                                    MAX_ = 'Maximum'
+                                if 'Average' in metricdesc:
+                                    AVG_ = 'Average'
+                            elif var2.startswith('Stat')or idx>0:
+                                metric_statistics = var2
+                                if 'Sum' in metric_statistics:
+                                    SUM_ = 'Sum'
+                                if 'Minimum' in metric_statistics:
+                                    MIN_ = 'Minimum'
+                                if 'Maximum' in metric_statistics:
+                                    MAX_ = 'Maximum'
+                                if 'Average' in metric_statistics:
+                                    AVG_ = 'Average'
+
                     self.mapping.append('elb.' + op.replace('aws.elb.','')+' '
-                                             'aws_elb_' + op.replace('aws.elb.','' ))
+                        'aws_elb_' + op.replace('aws.elb.','' ))
                     self.add_to_list(self.aws_list, op, metric_desc, )
-                    self.add_to_list(self.aws_list, op + ".minimum", metric_desc + ".minimum")
-                    self.add_to_list(self.aws_list, op + ".maximum", metric_desc + ".maximum")
-                    self.add_to_list(self.aws_list, op + ".average", metric_desc + ".average")
+                    #print(metric_statistics)
+                    if MIN_:
+                        self.add_to_list(self.aws_list, op + ".minimum", metric_desc)
+                    if MAX_:
+                        self.add_to_list(self.aws_list, op + ".maximum", metric_desc)
+                    if AVG_:
+                        self.add_to_list(self.aws_list, op + ".average", metric_desc )
+                    if SUM_:
+                        self.add_to_list(self.aws_list, op + ".sum", metric_desc)
 
-
+                SUM_ = ''
+                MIN_ = ''
+                MAX_ = ''
+                AVG_ = ''
 
             else:
                 if originalmetricname in CODE_MAP.keys():
@@ -141,8 +174,26 @@ class ELBExtractor:
                         var2 = ' '.join(var1.split())
                         if var2 and idx == 0:
                             metric_desc = var2
-                        elif var2.startswith('Reporting criteria'):
-                            metric_reporting_criteria = var2
+                            metricdesc = var2
+                            if 'Sum' in metricdesc:
+                                SUM_ = 'Sum'
+                            if 'Minimum' in metricdesc:
+                                MIN_ = 'Minimum'
+                            if 'Maximum' in metricdesc:
+                                MAX_ = 'Maximum'
+                            if 'Average' in metricdesc:
+                                AVG_ = 'Average'
+                        elif var2.startswith('Statistics:')or idx>0:
+                            metric_ststone = var2
+
+                            if 'Sum' in metric_ststone:
+                                SUM_ = 'Sum'
+                            if 'Minimum' in metric_ststone:
+                                MIN_ = 'Minimum'
+                            if 'Maximum' in metric_ststone:
+                                MAX_ = 'Maximum'
+                            if 'Average' in metric_ststone:
+                                AVG_ = 'Average'
                         elif var2.startswith('Example'):
                             metric_example = var2
                         idx = idx + 1
@@ -152,9 +203,15 @@ class ELBExtractor:
                                              'aws_elb_' + metric_name.replace('aws.elb.',''))
 
                     self.add_to_list(self.aws_list, metric_name, metric_desc, )
-                    self.add_to_list(self.aws_list, metric_name + ".minimum", metric_desc + ".minimum")
-                    self.add_to_list(self.aws_list, metric_name + ".maximum", metric_desc + ".maximum")
-                    self.add_to_list(self.aws_list, metric_name + ".average", metric_desc + ".average")
+                    if MIN_:
+                        self.add_to_list(self.aws_list, metric_name + ".minimum", metric_desc)
+                    if MAX_:
+                        self.add_to_list(self.aws_list, metric_name + ".maximum", metric_desc)
+                    if AVG_:
+                        self.add_to_list(self.aws_list, metric_name + ".average", metric_desc )
+                    if SUM_:
+                        self.add_to_list(self.aws_list, metric_name + ".sum", metric_desc)
+
 
                     #self.mapping.append(['elb.' + self.convertToSnakeCase(ogmetricfive_name),
                                         #'aws_elb_' + self.convertToSnakeCase(ogmetricfive_name)])
@@ -181,6 +238,7 @@ class ELBExtractor:
                                  'aws_elb_' + met_name.replace('aws.elb.', ''))
 
             self.add_to_list(self.aws_list, met_name, met_desc)
+
             #self.mapping.append(['elb.' + self.convertToSnakeCase(ogmetricfive_name),
                                  #'aws_elb_' + self.convertToSnakeCase(ogmetricfive_name)])
 
@@ -201,9 +259,9 @@ class ELBExtractor:
         #print(self.mapping)
         #for i in self.mapping:
         self.add_to_list(self.aws_list, httpcode2, metric_desc, )
-        self.add_to_list(self.aws_list, httpcode2 + ".minimum", metric_desc + ".minimum")
-        self.add_to_list(self.aws_list, htppcode2 + ".maximum", metric_desc + ".maximum")
-        self.add_to_list(self.aws_list, httpcode2 + ".average", metric_desc + ".average")
+        self.add_to_list(self.aws_list, httpcode2 + ".minimum", metric_desc )
+        self.add_to_list(self.aws_list, httpcode2 + ".maximum", metric_desc)
+        self.add_to_list(self.aws_list, httpcode2 + ".average", metric_desc )
         self.mapping.append('elb.' + httpcode2.replace('aws.elb.', '') + ' '
                                                                          'aws_elb_' + httpcode2.replace('aws.elb.', ''))
 
