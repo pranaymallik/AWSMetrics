@@ -78,9 +78,8 @@ class AWSVPC_NATExtractor:
                         metric_stats = var.replace('Statistics: The most useful statistic is ','').replace('.','')
                 # print(metric_name)
                 self.aws_list2.append([original_metric_name,metric_stats])
-                self.add_to_list(self.aws_list,metric_name+'.minimum',metric_desc,metric_units)
-                self.add_to_list(self.aws_list,metric_name+'.maximum', metric_desc, metric_units)
-                self.add_to_list(self.aws_list,metric_name+'.average', metric_desc, metric_units)
+                self.add_to_list(self.aws_list,metric_name+'.'+self.snake_case(metric_stats),metric_desc,metric_units)
+
                 idx = idx + 1
                 self.mapping.append('vpc.' + metric_name.replace('aws.vpc.', '')+' '+
                                      'aws_vpc_' + metric_name.replace('aws.vpc.', ''))

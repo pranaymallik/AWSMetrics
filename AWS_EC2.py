@@ -66,6 +66,7 @@ class AWSEc2Extractor:
         tablefourrows = matchone[4].findAll('tr')
         table5 = matchone[5].findAll('tr')
         table6rows = matchone[6].findAll('tr')
+        met_s = ''
 
         for i in rows[1:]:
             cols = i.findAll('td')
@@ -73,7 +74,7 @@ class AWSEc2Extractor:
                 col = cols[0]
                 ogmetric_name = col.text.strip()
                 metric_name = 'aws.ec2.' + self.convertToSnakeCase(ogmetric_name)
-
+                metr_stats = ''
                 met_desc = ''
                 met_unit = ''
                 met_stats = ''
@@ -102,6 +103,7 @@ class AWSEc2Extractor:
                         elif var2.startswith('Statistics'):
                             met_stats = var2
                             met_stats = var2.replace('Statistics:','').replace('"','')
+                            metr_stats = met_stats
                             if met_stats in CODE_MAP.keys():
                                 met_stats = CODE_MAP[met_stats]
                         if met_stats =='':
@@ -115,7 +117,7 @@ class AWSEc2Extractor:
                     self.aws_list2.append([ogmetric_name,met_stats])
                     self.mapping.append('ec2.'+self.convertToSnakeCase(metric_name).replace('aws.ec2.','')+' '+'aws_ec2_'+self.convertToSnakeCase(metric_name).replace('aws.ec2.',''))
 
-                    if met_stats:
+                    if metr_stats:
                         self.add_to_list(self.aws_list, metric_name + ".minimum", met_unit, met_desc + ".minimum")
                         self.add_to_list(self.aws_list, metric_name + ".maximum", met_unit, met_desc + ".maximum")
                         self.add_to_list(self.aws_list, metric_name + ".average", met_unit, met_desc + ".average")
@@ -150,13 +152,20 @@ class AWSEc2Extractor:
                             met_descone = vary
                         elif vary.startswith('Units'):
                             met_unitone = vary
+
                             if 'Count' not in met_unitone:
                                 met_unitone = 'gauge'
                             else:
                                 met_unitone = 'count'
-                        idx + idx + 1
+                        elif idx == 1 and 'Sum' in vary:
+                            met_s = 'Fill'
+                        idx = idx + 1
                     self.add_to_list(self.aws_list, metric_namethree, met_unitone, met_descone)
                     self.aws_list2.append([ogmetricthree_name,"None"])
+                    if met_s:
+                        self.add_to_list(self.aws_list, metric_namethree+'.sum', met_unitone, met_descone)
+                        met_s = ''
+
                     self.mapping.append('ec2.' + self.convertToSnakeCase(metric_namethree).replace('aws.ec2.','')+ ' '+
                                         'aws_ec2_' + self.convertToSnakeCase(metric_namethree).replace('aws.ec2.',''))
 
@@ -203,9 +212,8 @@ class AWSEc2Extractor:
 
                     self.add_to_list(self.aws_list, metric_nametwo,'gauge', met_desctwo)
                     if met_stat:
-                        self.add_to_list(self.aws_list, metric_nametwo+'.minimum','gauge', met_desctwo)
-                        self.add_to_list(self.aws_list, metric_nametwo+'.maximum','gauge', met_desctwo)
-                        self.add_to_list(self.aws_list, metric_nametwo+'.average','gauge', met_desctwo)
+                        self.add_to_list(self.aws_list, metric_nametwo+'.sum','gauge', met_desctwo)
+
 
                     self.aws_list2.append([ogmetrictwo_name, "None"])
                     self.mapping.append('ec2.' + self.convertToSnakeCase(metric_nametwo).replace('aws.ec2.','')+' '+
@@ -329,13 +337,11 @@ class AWSEc2Extractor:
                                     'aws_ec2_' + self.convertToSnakeCase(ogmetricsix_name))
 
                 #self.aws_list2.append([met_statsonesix])
-                if met_statsonesix:
-                    self.add_to_list(self.aws_list, metric_namesix + ".minimum", met_unitonesix,
-                                     met_desconefive + ".minimum")
-                    self.add_to_list(self.aws_list, metric_namesix + ".maximum", met_unitonesix,
+
+
+                self.add_to_list(self.aws_list, metric_namesix + ".maximum", met_unitonesix,
                                      met_desconefive + ".maximum")
-                    self.add_to_list(self.aws_list, metric_namesix + ".average", met_unitonesix,
-                                     met_desconefive + ".average")
+
         for t in table6rows[1:]:
             colp = t.findAll('td')
             co = colp[0]
