@@ -80,9 +80,6 @@ class ELBExtractor:
                 self.aws_list2.append(['HTTPCode_Backend_3XX','None'])
                 self.aws_list2.append(['HTTPCode_Backend_4XX','None'])
                 self.aws_list2.append(['HTTPCode_Backend_5XX','None'])
-
-
-
             else:
                 self.aws_list2.append([originalmetricname,'None'])
 
@@ -106,7 +103,7 @@ class ELBExtractor:
                 secondString = thirdString.replace(' ','')
                 thirdString = fourthString.replace(' ','')
 
-                stringsArray = ['aws.elb.'+firstString.lower() ,'aws.elb.'+secondString.lower(),'aws.elb.'+thirdString.lower() ,'aws.elb.'+fourthString.lower()]
+                stringsArray = ['aws.elb.'+firstString.lower() ,'aws.elb.'+secondString.lower(),'aws.elb.'+thirdString.lower()]
                 for op in stringsArray:
                     sections = colone.findChildren('p')
                     if sections and len(sections) > 0:

@@ -4,7 +4,6 @@ elb.healthy_host_count aws_elb_healthy_host_count
 elb.httpcode_backend_3xx aws_elb_httpcode_backend_3xx
 elb.httpcode_backend_4xx aws_elb_httpcode_backend_4xx
 elb.httpcode_backend_5xx aws_elb_httpcode_backend_5xx
-elb.httpcode_backend_5xx aws_elb_httpcode_backend_5xx
 elb.http_code_elb_4xx aws_elb_http_code_elb_4xx
 elb.http_code_elb_5xx aws_elb_http_code_elb_5xx
 elb.latency aws_elb_latency
